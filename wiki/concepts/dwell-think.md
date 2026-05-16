@@ -45,8 +45,10 @@ nishio の言い換え:
 
 ## 関連
 
-- [Kozaneba:thing](thing.md) — Heidegger の「物」をキーワード抽出方式で読んだ実験
+- [thing](thing.md) — Heidegger の「物」をキーワード抽出方式で読んだ実験
 - [Kozaneba修行](Kozaneba修行.md) — Kozaneba で哲学書を読む行為全般
+- [情報の中に住む](情報の中に住む.md) — 川喜田二郎の同型表現
+- [Gendlin](../entities/Gendlin.md) — dwell-think を中継した思想家
 
 ## Sources
 

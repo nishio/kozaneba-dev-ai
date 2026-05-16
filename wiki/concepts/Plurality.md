@@ -10,7 +10,7 @@ sources:
 
 ## 定義
 
-**Plurality**(プルーラリティ)は、Audrey Tang と Glen Weyl を中心に提唱される「デジタル技術による複数性」のムーブメント。[Kozaneba](../entities/Kozaneba.md) のソースには、nishio が 2023-04 にこの概念をまず咀嚼した記録が残る。
+**Plurality**(プルーラリティ)は、[Audrey Tang](../entities/Audrey_Tang.md) と Glen Weyl を中心に提唱される「デジタル技術による複数性」のムーブメント。[Kozaneba](../entities/Kozaneba.md) のソースには、nishio が 2023-04 にこの概念をまず咀嚼した記録が残る。
 
 [Kozaneba:Plurality](../../raw/scrapbox_kozaneba/2023-04-11__Kozaneba_Plurality.md) より:
 
@@ -22,7 +22,7 @@ sources:
 
 [Kozaneba:Plurality](../../raw/scrapbox_kozaneba/2023-04-11__Kozaneba_Plurality.md):
 
-> 何百万人もの人々が仲間の意見分布のエッセンスを抽出したものを聞くことができる「**ブロードリスニング**」を可能にする。
+> 何百万人もの人々が仲間の意見分布のエッセンスを抽出したものを聞くことができる「**[ブロードリスニング](ブロードリスニング.md)**」を可能にする。
 
 > Plurality の段階では「業務上有益な概念」という感覚だったものが「ブロードリスニング」になって急にテンションぶち上がりになる。やっぱ僕は本質的に「**人間の知的能力の強化**」に関心があるのだなぁ。
 

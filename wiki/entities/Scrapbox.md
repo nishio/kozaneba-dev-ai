@@ -50,7 +50,7 @@ sources:
 - [KozanebaにScrapbox的な思い出し効果をつける](../../raw/scrapbox_kozaneba/2021-12-11__KozanebaにScrapbox的な思い出し効果をつける.md)
 - [Kozaneba:Scrapboxベストプラクティス2022](../../raw/scrapbox_kozaneba/2022-03-02__Kozaneba_Scrapboxベストプラクティス2022.md)
 - [Kozaneba+Scrapbox](../../raw/scrapbox_kozaneba/2022-03-25__Kozaneba+Scrapbox.md)
-- [ScrapboxプロジェクトをKozanebaにインポートする(開発)](../../raw/scrapbox_kozaneba/2023-02-17__ScrapboxプロジェクトをKozanebaにインポートする(開発).md)
+- [ScrapboxプロジェクトをKozanebaにインポートする(開発)](../../raw/scrapbox_kozaneba/2023-02-17__ScrapboxプロジェクトをKozanebaにインポートする%28開発%29.md)
 - [ScrapboxプロジェクトをKozanebaにインポートする実験](../../raw/scrapbox_kozaneba/2023-02-17__ScrapboxプロジェクトをKozanebaにインポートする実験.md)
 - [Scrapboxの行とKozanebaのこざねの対応づけ](../../raw/scrapbox_kozaneba/2023-03-31__Scrapboxの行とKozanebaのこざねの対応づけ.md)
 - [ScrapboxとKozanebaの構造の比較](../../raw/scrapbox_kozaneba/2023-11-04__ScrapboxとKozanebaの構造の比較.md)

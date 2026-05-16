@@ -27,10 +27,10 @@ KJ法的な手法は有益だが、紙でやると不便がある。よいデジ
 
 ## 系譜
 
-- 前身: [Regroup](Regroup.md)(未作成) → [Movidea](Movidea.md)(未作成)
+- 前身: [Regroup](Regroup.md) → [Movidea](Movidea.md)
 - 関連:
-  - [Keichobot](Keichobot.md)(未作成) — 言語化を促す対話ボット。Kozaneba と対比して論じられることが多い(「[Keichobot は言語化し Kozaneba は一次元化する](../raw/scrapbox_kozaneba/2021-12-24__Keichobotは言語化しKozanebaは一次元化する.md)」)
-  - [Scrapbox](Scrapbox.md)(未作成) — リンクベースのノートツール。Kozaneba とは構造的に対比される(「[ScrapboxとKozanebaの構造の比較](../raw/scrapbox_kozaneba/2023-11-04__ScrapboxとKozanebaの構造の比較.md)」)
+  - [Keichobot](Keichobot.md) — 言語化を促す対話ボット。Kozaneba と対比して論じられることが多い(「[Keichobot は言語化し Kozaneba は一次元化する](../../raw/scrapbox_kozaneba/2021-12-24__Keichobotは言語化しKozanebaは一次元化する.md)」、テーマページ [Kozaneba vs Keichobot](../themes/Kozaneba_vs_Keichobot.md))
+  - [Scrapbox](Scrapbox.md) — リンクベースのノートツール。Kozaneba とは構造的に対比される(「[ScrapboxとKozanebaの構造の比較](../../raw/scrapbox_kozaneba/2023-11-04__ScrapboxとKozanebaの構造の比較.md)」、テーマページ [Kozaneba vs Scrapbox](../themes/Kozaneba_vs_Scrapbox.md))
 
 ## このリポジトリでの分量
 

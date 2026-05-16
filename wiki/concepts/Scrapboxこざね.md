@@ -49,7 +49,7 @@ sources:
 
 ## 課題
 
-[ScrapboxプロジェクトをKozanebaにインポートする(開発)](../../raw/scrapbox_kozaneba/2023-02-17__ScrapboxプロジェクトをKozanebaにインポートする(開発).md):
+[ScrapboxプロジェクトをKozanebaにインポートする(開発)](../../raw/scrapbox_kozaneba/2023-02-17__ScrapboxプロジェクトをKozanebaにインポートする%28開発%29.md):
 
 > Scrapbox こざねに leave from lines メニューがついてない / clone もついてない。
 
@@ -60,5 +60,5 @@ Scrapbox こざねが通常のこざねと「対等な操作対象」になり�
 - [Kozanebaの開発をKozanebaで管理](../../raw/scrapbox_kozaneba/2021-08-28__Kozanebaの開発をKozanebaで管理.md)
 - [KozanebaでScrapboxのリンクを整理](../../raw/scrapbox_kozaneba/2021-08-31__KozanebaでScrapboxのリンクを整理.md)
 - [Kozaneba+Scrapbox](../../raw/scrapbox_kozaneba/2022-03-25__Kozaneba+Scrapbox.md)
-- [ScrapboxプロジェクトをKozanebaにインポートする(開発)](../../raw/scrapbox_kozaneba/2023-02-17__ScrapboxプロジェクトをKozanebaにインポートする(開発).md)
+- [ScrapboxプロジェクトをKozanebaにインポートする(開発)](../../raw/scrapbox_kozaneba/2023-02-17__ScrapboxプロジェクトをKozanebaにインポートする%28開発%29.md)
 - [Kozanebaを累積KJ法に近づける](../../raw/scrapbox_kozaneba/2024-03-07__Kozanebaを累積KJ法に近づける.md)
