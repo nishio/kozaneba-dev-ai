@@ -1,0 +1,20 @@
+---
+title: 幅優先探索Keichobot
+created: 2023-08-11
+updated: 2023-08-11
+source: Scrapbox /nishio
+in_title: False
+---
+
+# 幅優先探索Keichobot
+
+幅優先探索Keichobot
+[オモイカネ勉強会の準備]
+	KozanebaはGPTの支援でもっと使いやすくなる反面、[Keichobot]はChatGPTでほとんど包含される
+	今までやってなかった「[幅優先探索]」が「チャット的ではないユースケース」として立ち現れてくる感じがした
+
+	Keichobotの概念が二つに分割される
+		[自分の書いたものに対して質問してくれると言語化が捗る]
+			これは今まで以上に有益になる
+		チャット的UI
+			これはそれほどでもない感じ
