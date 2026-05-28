@@ -221,7 +221,7 @@ Keichobot は「Situation Pad に書ける材料」を作り、Kozaneba は「�
 ## 開いた問い
 
 - 「[ボードゲームとしてのクリーンランゲージ](../concepts/クリーンランゲージ.md)」(2023-03)で nishio が指摘した「LLM で会話を自然にすればするほど構造が見えにくくなる」逆説に、Clean Relation Elicitation はどう応えるか
-- 既存の [Kozaneba](../entities/Kozaneba.md) を改造する形で実装するか、[Canvas プロトタイプ](Canvas移行の検討.md) 側に新規実装するか
+- 既存の [Kozaneba](../entities/Kozaneba.md) を改造する形で実装するか、[Canvas プロトタイプ](Canvas移行の検討.md) 側に新規実装するか、それとも [3 Plan 議論](3plan議論.md) の **Plan A**([Keichobot](../entities/Keichobot.md) / [いどばた](../entities/いどばた.md) / Kozaneba を参考にした全く新しいサービス)として新規実装するか — 2026-05-16 時点では Plan A が有力(本テーマ自体が Plan A の対話レイヤ設計の出発点に位置づけられた)
 - このUI設計は [Plurality](../concepts/Plurality.md) / [広聴AI](../concepts/広聴AI.md) のような大規模意見集約とどう接続するか(クリーンランゲージは1対1、ブロードリスニングは N対多)
 - ボタン名・ラベルの言語問題 — クリーン質問の英日翻訳をどう扱うか
 

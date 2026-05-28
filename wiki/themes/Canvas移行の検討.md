@@ -68,6 +68,15 @@ sources:
 - 新規プロジェクトとして Canvas 版を別途作るか
 - 「広聴 AI のリーフノード = 付箋」のニーズと Kozaneba を本当にマージすべきか
 
+## 2026-05-16: 「両方やる」への着地
+
+[3 Plan 議論](3plan議論.md) で、上記「分けるか統合するか」の問いに **両方やる** で着地した:
+
+- **Plan B**(現 Kozaneba 改造): nishio 自身の 300 件作業を加速するためのドッグフーディング駆動修正。[源の長文](../concepts/源の長文.md) データモデル拡張を含む。Canvas 化 vs 現 DOM のままで済ますかは Plan B 期間で再評価
+- **Plan A**(新規サービス): [Keichobot](../entities/Keichobot.md) / [いどばた](../entities/いどばた.md) / Kozaneba を参考にした全く新しいサービス。データモデルから新規。Kozaneba を deprecate するか並列にするかは未決
+
+Canvas 移行論はもともと「Kozaneba の延長線上で大規模化どうする」の問いだったが、Plan A の登場で問いの形が変わる: 大規模化が必要なのは現 Kozaneba ではなく Plan A 側かもしれず、現 Kozaneba の Canvas 化を急ぐ理由は弱まる。
+
 ## Sources
 
 - [Kozanebaのコードを丸ごとo1 Proに入れる](../../raw/scrapbox_kozaneba/2024-12-14__Kozanebaのコードを丸ごとo1_Proに入れる.md)

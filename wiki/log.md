@@ -175,3 +175,49 @@ updated: 2026-05-16
 - [こざね](concepts/こざね.md) に「Pipeline 上の位置: 梅棹こざね との定義のズレ」「源の長文を持たない問題」セクション追加。
 - [wiki/index.md](index.md) を更新。
 - 観察ポイント: [断片中心から関係中心へ](themes/断片中心から関係中心へ.md) と [源の長文](concepts/源の長文.md) は、それぞれ断片偏重の「横の問題(関係性)」と「縦の問題(由来)」を扱う。両方が「断片中心バイアス」の異なる症状。
+
+## [2026-05-16] ingest | llm-wiki からのクロスリファレンス作成
+
+- nishio の依頼で並行 wiki [/Users/nishio/llm-wiki/wiki/](../../llm-wiki/wiki/index.md) を走査し、Kozaneba プロジェクトに関係するページを抽出。
+- llm-wiki 側は 2026-04 以降に育てられた知的生産・LLM Wiki パターンの知識ベース。Kozaneba を比較対象として継続参照しており、Kozaneba 観察から抽出された概念群がすでに存在することを確認。
+- 取り込み方針について nishio に質問 → 「まず全体マッピングを wiki/sources/ に 1 枚作る」を選択。
+- 作成: [wiki/sources/llm-wiki-cross-reference.md](sources/llm-wiki-cross-reference.md) — llm-wiki 側ページ群と Kozaneba 側ページの対応表、未取り込み候補概念リスト、取り込み方針メモを記載。
+- [wiki/index.md](index.md) の Sources セクションに 1 件追加(初の sources/ エントリ)。
+- 主要発見:
+  - llm-wiki 側に **Kozaneba を直接言及するページ** 4 本(entities/kozaneba, entities/connecting-dots, entities/mindtrellis, sources/gpt-mindtrellis-connectingdots-20260503)
+  - llm-wiki 側で **Kozaneba 観察から抽出された一般化概念** 3 本(pre-linguistic-structuring / kangaeru-hanabi / structure-as-hypothesis)
+  - [themes/関係を第一級にする](themes/関係を第一級にする.md) と llm-wiki 側 `relation-flattening` / `concept-as-region` がほぼ同じ問題圏(KJ 法・Gendlin・埋め込み議論)で、相互に強い理論的補強関係にある
+  - llm-wiki は Kozaneba 側の議論を観察した結果として育っているため、同じ素材で抽象化が一段進んでいる場合が多い(逆輸入の価値あり)
+- 次の候補(未着手): 個別ページの取り込み判断(「前言語的構造化」を独立 concept ページ化するか、[Kozaneba読書](concepts/Kozaneba読書.md) への追記で済ますか等)、「AI を Kozaneba に入れるなら」テーマページの新設可能性(structure-as-hypothesis / ConnectingDots の Inbox 化が核)。
+
+## [2026-05-16] query | 3 Plan 議論 → 道具改造 + 新規プロダクトの二段構え
+
+- nishio が「今考えていること」として 3 Plan を提示:
+  - Plan A: Keichobot 発展形(対話による個人向け言語化支援)
+  - Plan B: 300 件文章からの知識獲得支援(直近の出口あり)
+  - Plan C: Kozaneba読書(「自分の中に価値」を信じられない人への外発入口)
+- Claude 側の最初の整理: 3 Plan は排他ではなく、[源の長文](concepts/源の長文.md)(Situation データモデル)拡張を共通基盤として[関係場](concepts/関係場.md) Pipeline 上の異なる Situation 由来として並べられる。C は B の特殊ケースとして包含。
+- nishio の回答で構図が転換:
+  - 「直近の出口」= **nishio 自身の 300 件作業を加速**(= Plan B)
+  - 「Plan A 時の Keichobot/いどばた との関係」= **3 つを参考にしつつ全く新しいサービス**
+- 結果: 3 Plan の選択問題が「**道具改造(Plan B)+ 新規プロダクト(Plan A)の二段構え**」に再定式化。長年の「改善するか作り直すか」の問いに対して**両方を並行する**結論。Plan B が「Plan A への踏み台」になる。
+- Plan A の輪郭素描(llm-wiki 側の概念を組み合わせ):
+  - [ConnectingDots](../../llm-wiki/wiki/entities/connecting-dots.md) の最初の本実装になる可能性
+  - Dots/Relations/Stories/Views 4 層 + identity-without-name + pre-linguistic-structuring + structure-as-hypothesis + relation-flattening 回避
+  - = 対話で Situation を引き出し、AI が候補化、人間が空間で確定、Stories として読み筋を立てるシステム
+- 新規 theme [3 Plan 議論](themes/3plan議論.md) を作成。Plan B 期間で記録すべき「Plan A 要求発見」5 項目(現Kozanebaでできなかった操作 / AIと対話したかった場面 / 言語化が早すぎて諦めた関係 / 同じこざねを別Storyで再利用したかった場面 / 1長文→Nこざね経路)を含む。
+- [wiki/index.md](index.md) の themes に追加。
+- Open Questions: deprecate vs 並列、Plan B 期間の目安、MVP の輪郭、Plan A の専門家ユーザ像、Plan C の入口戦略化。
+
+## [2026-05-16] fill back | 3 Plan 議論を関連 8 ページに浸透
+
+- nishio の依頼で、[3 Plan 議論](themes/3plan議論.md) の核心(「両方やる」= 道具改造の Plan B + 新規サービスの Plan A、3 系列を吸収する合流点としての Plan A、源の長文を共通基盤とする等)を関連既存ページに局所追記。
+- 更新したページ 8 本:
+  - [overview.md](overview.md) — 「改善するか作り直すか」の問いに「両方を並行する」方針を明記。Plan B/A の概要追加
+  - [entities/Kozaneba.md](entities/Kozaneba.md) — 新規セクション「現状(Plan B)と次世代(Plan A)の二段構え」追加
+  - [themes/系譜.md](themes/系譜.md) — 系譜図に 2026-05-16 の分岐を追加(Plan B + Plan A)、新規セクション「2026-05-16: Plan B + Plan A への分岐」追加。Plan A は 3 系列を吸収する合流点と明示
+- [themes/Canvas移行の検討.md](themes/Canvas移行の検討.md) — 新規セクション「2026-05-16: 『両方やる』への着地」追加。Canvas 化を急ぐ理由が弱まったことを明記
+- [themes/Kozaneba vs Keichobot](themes/Kozaneba_vs_Keichobot.md) — 新規セクション「2026-05-16: Plan A による分業の解体」追加。連続体としての 1 システム化が Plan A の輪郭
+- [themes/関係を第一級にする](themes/関係を第一級にする.md) — Kozaneba 設計への含意の末尾に、Plan A が本テーマの直接の実装ターゲットになる旨を追加(relation-flattening 回避まで含む)
+- [themes/Clean Relation Elicitation](themes/Clean_Relation_Elicitation.md) — Open Questions の選択肢に Plan A を追加(2026-05-16 時点で有力)
+- [concepts/源の長文](concepts/源の長文.md) — 新規セクション「Plan B と Plan A の共通基盤としての位置」追加。Plan B 期間の先行実装基盤として位置づけ

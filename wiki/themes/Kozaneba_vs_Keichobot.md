@@ -61,11 +61,20 @@ Keichobot の出力(チャット時系列)を Kozaneba に流し込んだとき�
 
 → パイプライン: いどばた/Keichobot → 概念マップ → Kozaneba/Miro。最終的に Miro に乗り換える可能性も視野に入っている。
 
+### 2026-05-16: Plan A による分業の解体
+
+[3 Plan 議論](3plan議論.md) で、Keichobot / Kozaneba / [いどばた](../entities/いどばた.md) の **3 つを参考にしつつ全く新しいサービス**(= Plan A)を作る方向が表明された。これは 2021-12 以来の「Keichobot は言語化 / Kozaneba は一次元化」の二項分業を、**連続体として一つのシステムに統合する**方向への解体になる。
+
+[Clean Relation Elicitation](Clean_Relation_Elicitation.md) で示された「Situation → Aspect → Relation Field → Projection」のパイプラインが、Plan A の対話レイヤの出発点として最も明確。Keichobot 単体 / Kozaneba 単体ではなく **連続体としての 1 システム**が Plan A の輪郭。
+
+ただし Plan A は新規サービスで、Keichobot / Kozaneba / いどばた の 3 つを deprecate するのか並列に保つのかは未決(cf. [3 Plan 議論](3plan議論.md))。
+
 ## 残された課題
 
 - Keichobot の対話ログから自動的に Kozaneba のグラフを生成する機能(2025 年時点で未実装)
 - [辺ラベル](../concepts/辺ラベル.md) 機能(技術的にはエッジへのイベントリスナ追加が必要)
 - 概念マップを操作する UI(Miro でやるか Kozaneba 拡張か)
+- 上記 3 つは Plan B 期間内で部分的に着手するか、Plan A で全部書き直すかの判断保留中
 
 ## Sources
 

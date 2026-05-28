@@ -107,10 +107,11 @@ updated: 2026-05-16
 - [関係を第一級にする](themes/関係を第一級にする.md) — ノード偏重批判と関係オブジェクトの属性モデル、既存系譜(Open Hypermedia / Wikidata / RDF / IBIS / Unfolding Edges)
 - [Clean Relation Elicitation](themes/Clean_Relation_Elicitation.md) — クリーンランゲージ系UIで関係場を漸進的に外化する設計案、Keichobot/Kozaneba 分業の再定義
 - [設計判断ログ 2021](themes/設計判断ログ.md) — 2021年の月別タイムラインと通奏低音
+- [3 Plan 議論](themes/3plan議論.md) — 2026-05-16 の「Kozaneba の次に何を作るか」議論。Plan B(現Kozaneba改造、自分の作業加速)+ Plan A(Keichobot+いどばた+Kozaneba参考の新規サービス)の二段構えに着地
 
 ## Sources(個別ソースの要約)
 
-*(現状は raw/scrapbox_kozaneba/ を直接参照しているため未作成)*
+- [llm-wiki クロスリファレンス](sources/llm-wiki-cross-reference.md) — 並行 wiki [llm-wiki](../../llm-wiki/wiki/index.md) との対応表。Kozaneba 観察から llm-wiki 側で抽出された概念群と、未取り込み候補
 
 ## Meta
 

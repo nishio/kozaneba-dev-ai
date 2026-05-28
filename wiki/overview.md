@@ -47,6 +47,13 @@ Kozaneba は単発のプロダクトではなく、長年の試行錯誤の系�
 
 数年にわたる断続的開発で nishio 自身の記憶が曖昧化してきたため、設計過程の思考メモを LLM 主導で構造化された wiki に整理する。最終目標は「現状の Kozaneba を改善するか、新しいものを作るか」を判断できる土台を作ること。
 
+2026-05-16 時点で、この問いに対して **両方を並行する** という方針が出ている([3 Plan 議論](themes/3plan議論.md)):
+
+- **Plan B**: 現 Kozaneba を改造して nishio 自身の 300 件作業を加速(ドッグフーディング駆動、[源の長文](concepts/源の長文.md) データモデル拡張)
+- **Plan A**: [Keichobot](entities/Keichobot.md) / [いどばた](entities/いどばた.md) / Kozaneba を参考にした **全く新しいサービス**
+
+本 wiki は両方の判断材料を持ち続ける役割になる(Plan B 期間中の Plan A 要求発見の記録器を兼ねる)。
+
 詳細は [CLAUDE.md](../CLAUDE.md) を参照。
 
 ## Sources
