@@ -2,7 +2,7 @@
 title: Index
 type: meta
 created: 2026-05-16
-updated: 2026-05-19
+updated: 2026-05-25
 ---
 
 このリポジトリの wiki ページ一覧。新しいページを作るたびに更新する。設計方針は [CLAUDE.md](../CLAUDE.md) を参照。
@@ -114,6 +114,7 @@ updated: 2026-05-19
 
 - [llm-wiki クロスリファレンス](sources/llm-wiki-cross-reference.md) — 並行 wiki [llm-wiki](../../llm-wiki/wiki/index.md) との対応表。Kozaneba 観察から llm-wiki 側で抽出された概念群と、未取り込み候補
 - [Kozaneba git history 2025 要約](sources/kozaneba-git-history-2025.md) — `work/kozaneba` の `git log` を読んだ、2025 年の主要な実装・設計変更の要約
+- [Kozaneba コード構造調査 2026-05](sources/kozaneba-code-architecture.md) — `work/kozaneba/` 現コードの構造、Item/Annotation スキーマ、物理演算実装、辺ラベルや N項関係がスキーマ上は実装済みである事実
 
 ## Meta
 

@@ -2,12 +2,13 @@
 title: Canvas 実装への移行検討
 type: theme
 created: 2026-05-16
-updated: 2026-05-19
+updated: 2026-05-25
 sources:
   - raw/scrapbox_kozaneba/2024-12-14__Kozanebaのコードを丸ごとo1_Proに入れる.md
   - raw/scrapbox_kozaneba/2025-09-11__pKozaneba2025-08-14.md
   - raw/scrapbox_kozaneba/2025-08-26__pKozaneba2025-08-26~27.md
   - raw/scrapbox_kozaneba/2025-08-29__pKozaneba2025-08-29.md
+  - work/kozaneba
 ---
 
 ## 背景
@@ -86,6 +87,16 @@ Canvas 移行論はもともと「Kozaneba の延長線上で大規模化どう�
 - **全く新しいものを作るストーリー**では、入口が対話や読書になる可能性が高く、Canvas は主役ではなく「後から見る view」の 1 つに下がる可能性がある
 
 したがって「Canvas にするか」は最上位の分岐ではなく、どのストーリーに進むかが先に来る判断になる。
+
+## 2026-05-25: コード一次調査で見えた DOM 実装のボトルネック構造
+
+[work/kozaneba コード構造調査](../sources/kozaneba-code-architecture.md) で確認した実装事実から、Canvas 化議論を精密化:
+
+- DOM レイヤ自体だけでなく、**`Physics/ItemRepulse.ts` が全 Item ペア走査の O(N²)** であり、これは描画エンジンを変えても残る。物理を使う場合、quadtree / Barnes-Hut 化が並行課題
+- 状態管理は `reactn` の単一グローバル state で、`setGlobal` が全 `useGlobal` を再評価しうる。`React.memo` + `useMemo` + `useCallback` で 2025-04 に最適化されたが([git history 2025](../sources/kozaneba-git-history-2025.md))、大規模化では state shape の分割か別の state ライブラリへの差し替えが先に効く可能性がある
+- 注釈レイヤは SVG で、`AnnotationLayer.tsx` が `pointerEvents: "none"` で全イベントを背景に通す設計。Canvas 化するときに「線をクリックして編集」を成立させるなら、ヒットテストを自前で書く必要があり、これは Devin が WebGL を避けた理由(テキスト描画と並ぶ再実装コスト)と同じ性質の負担
+
+つまり Canvas 化を仮にやるとして、**書き直さなければならないのは描画だけでなく、(a) 物理アルゴリズム、(b) ヒットテスト、(c) 状態管理のスコープ** の 3 つが連動する。Devin の「WebGL 推奨しない」判断はこの 3 点コストを暗黙に評価したものとして読める。
 
 ## Sources
 

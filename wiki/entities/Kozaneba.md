@@ -2,10 +2,11 @@
 title: Kozaneba
 type: entity
 created: 2026-05-16
-updated: 2026-05-19
+updated: 2026-05-25
 sources:
   - raw/scrapbox_kozaneba/2021-08-20__かんがえをまとめるデジタル文房具Kozaneba.md
   - raw/scrapbox_kozaneba/2021-09-02__Kozaneba.md
+  - work/kozaneba
 ---
 
 ## 定義
@@ -50,6 +51,19 @@ Plan A は Kozaneba の直接の継承ではなく、Kozaneba を deprecate す�
 - **全く新しいものを作るストーリー**では、Kozaneba は直接の UI 継承元というより、洞察の供給源。入口は canvas でない可能性がある
 
 この整理により、Kozaneba は「改善される現役プロダクト」であると同時に、「次世代設計の観察装置」でもある、と位置づけ直せる。
+
+## 2026-05-25: 実装上の事実(コード一次調査より)
+
+[work/kozaneba コード構造調査](../sources/kozaneba-code-architecture.md) で `work/kozaneba/`(main, 5de81c2)を読んで判明した実装上の事実:
+
+- 技術スタック: React 18 + TypeScript + Firebase + Netlify、状態管理は `reactn` の単一グローバル state
+- Item は **4 種類の Union**(`kozane / group / scrapbox / gyazo`)。「源の長文」を持つ型は無い
+- Annotation は **`line` 1 種類のみ**で、`items: Array(RTItemId)`(N項可)と `label: String.optional()`(辺ラベル可)が既にデータモデル上は実装済み
+- `package.json` の `name` は依然 `"movidea"`([Movidea](Movidea.md) からの一本道のコードベースを継承)
+- 物理演算は全 Item ペア走査 + 線の重心ばねという素朴実装で O(N²)
+- 隠しフラグ `kozaneba.constants.exp_no_adjust` で「`#` で始まる Kozane を見出し風に表示」する実験機能
+
+これは Plan B での最小改造を考えるとき、「**辺ラベル UI**」と「**源の長文フィールド**」が独立した 2 軸の改造起点になることを示唆する([3 Plan 議論](../themes/3plan議論.md))。前者はデータモデルに手を入れず UX 動線だけで済むが、後者はデータモデルそのものの拡張が必要。
 
 ## このリポジトリでの分量
 

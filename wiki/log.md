@@ -2,7 +2,7 @@
 title: Log
 type: meta
 created: 2026-05-16
-updated: 2026-05-19
+updated: 2026-05-25
 ---
 
 時系列の作業ログ。append-only。新しいエントリはファイル末尾に追加する。見出しは `## [YYYY-MM-DD] <action> | <subject>` の形式で統一する(`grep "^## \[" wiki/log.md` でパース可能にするため)。
@@ -218,9 +218,6 @@ updated: 2026-05-19
   - [themes/系譜.md](themes/系譜.md) — 系譜図に 2026-05-16 の分岐を追加(Plan B + Plan A)、新規セクション「2026-05-16: Plan B + Plan A への分岐」追加。Plan A は 3 系列を吸収する合流点と明示
 - [themes/Canvas移行の検討.md](themes/Canvas移行の検討.md) — 新規セクション「2026-05-16: 『両方やる』への着地」追加。Canvas 化を急ぐ理由が弱まったことを明記
 - [themes/Kozaneba vs Keichobot](themes/Kozaneba_vs_Keichobot.md) — 新規セクション「2026-05-16: Plan A による分業の解体」追加。連続体としての 1 システム化が Plan A の輪郭
-- [themes/関係を第一級にする](themes/関係を第一級にする.md) — Kozaneba 設計への含意の末尾に、Plan A が本テーマの直接の実装ターゲットになる旨を追加(relation-flattening 回避まで含む)
-- [themes/Clean Relation Elicitation](themes/Clean_Relation_Elicitation.md) — Open Questions の選択肢に Plan A を追加(2026-05-16 時点で有力)
-- [concepts/源の長文](concepts/源の長文.md) — 新規セクション「Plan B と Plan A の共通基盤としての位置」追加。Plan B 期間の先行実装基盤として位置づけ
 
 ## [2026-05-19] query | Kozaneba git log の主要設計変更
 
@@ -250,3 +247,38 @@ updated: 2026-05-19
 - [themes/Canvas移行の検討.md](themes/Canvas移行の検討.md) — Canvas を最上位目標ではなく、3 ストーリーのどこで必要かを見極める対象として整理
 - [themes/関係を第一級にする.md](themes/関係を第一級にする.md) — relation-first 設計が特に「似たもの新規」ストーリーの中核だと明記
 - [themes/3plan議論.md](themes/3plan議論.md) — 二段構えの整理と、後続の 3 ストーリー比較ページとの役割分担を追記
+  - [themes/関係を第一級にする](themes/関係を第一級にする.md) — Kozaneba 設計への含意の末尾に、Plan A が本テーマの直接の実装ターゲットになる旨を追加(relation-flattening 回避まで含む)
+  - [themes/Clean Relation Elicitation](themes/Clean_Relation_Elicitation.md) — Open Questions の選択肢に Plan A を追加(2026-05-16 時点で有力)
+  - [concepts/源の長文](concepts/源の長文.md) — 新規セクション「Plan B と Plan A の共通基盤としての位置」追加。Plan B 期間の先行実装基盤として位置づけ
+- 効果:
+  - 3 Plan 議論の影響が wiki ネットワーク全体に拡散し、どのページから入っても Plan A/B の二段構えに到達できる
+  - 既存ページに残っていた Open Question(「Canvas 化するか」「Keichobot/Kozaneba 融合」「移植先での書き直し」)が Plan A の登場で形を変えたことが明示
+  - Plan B 期間中の作業で他のページを開いたときに、Plan A 要求発見の文脈を保ち続けられる
+
+## [2026-05-25] query | work/kozaneba コード構造調査
+
+- nishio の依頼で `work/kozaneba/`(main, 5de81c2)のソース構造を直接読み、Scrapbox メモには現れない実装上の事実を確認。
+- 主要発見:
+  - Item Union は **`kozane / group / scrapbox / gyazo` の 4 種のみ**。「源の長文」を持つ型は無く、`RTKozaneItem` も `text / position / scale / custom.{ style?, url? }` のみ
+  - Annotation は **`line` 1 種類のみ**で、`items: Array(RTItemId)` で N項可、`label: String.optional()` で **辺ラベルのデータモデルは既に存在**(2025-09 PR #36 で入っている)
+  - 線種は `heads: ("none" | "arrow")[]` と `is_doubled: Boolean` の組合せで全パターン表現
+  - エッジクリック不可は `AnnotationLayer.tsx` の `pointerEvents: "none"` + 個別 `<line>` の `is_clickable` 復活設計に由来
+  - 物理演算は `ItemRepulse`(全ペア走査 O(N²))+ `LineSpring`(線の重心ばね、自然長 KOZANE_WIDTH)+ `pin` の素朴実装
+  - 状態管理は `reactn` の単一グローバル state、`package.json` の `name` は依然 `"movidea"`
+  - 隠しフラグ `kozaneba.constants.exp_no_adjust` で「`#` 始まりを見出し風に表示」する実験機能
+
+## [2026-05-25] fill back | コード構造調査を関連 6 ページに浸透
+
+- 新規 source ページ [sources/kozaneba-code-architecture.md](sources/kozaneba-code-architecture.md) を作成し、コード一次調査の事実をまとめて [index.md](index.md) Sources に登録。
+- 既存ページへの局所追記:
+  - [concepts/物理演算](concepts/物理演算.md) — 新規セクション「現コードでの実装(2026-05 時点)」。O(N²) 構造とアルゴリズム選択の整合性を明記
+  - [concepts/辺ラベル](concepts/辺ラベル.md) — 新規セクション「2026-05: コード上はデータモデルが既に完成している」。残課題を「フィールド追加」から「UX 動線」へ書き換え
+  - [concepts/N項関係](concepts/N項関係.md) — 新規セクション「コード上の現状」。スキーマ `items: Array(RTItemId)` で N 項表現可、不足は UI 動線
+  - [concepts/線を引く機能](concepts/線を引く機能.md) — 新規セクション「コード上の線種」。`heads` + `is_doubled` で全線種を表現、エッジクリック不可の正確な原因
+  - [concepts/源の長文](concepts/源の長文.md) — Plan B 最小改造の 3 つのデータモデル案(`RTKozaneItem` 拡張 / 新 Item type / 別 collection)を追記
+  - [entities/Kozaneba](entities/Kozaneba.md) — 新規セクション「実装上の事実」。スタック、Item 4 種、annotation のスキーマ、movidea 残存、隠しフラグを集約
+  - [themes/Canvas移行の検討](themes/Canvas移行の検討.md) — 新規セクション「DOM 実装のボトルネック構造」。Canvas 化と並行して必要になる物理アルゴリズム / ヒットテスト / 状態管理スコープの 3 点を明示
+- 効果:
+  - 「辺ラベル機能が無い」「N項関係が実装されてない」という古い書きぶりを最新コードに合わせて修正
+  - Plan B 期間に着手する改造の起点として「辺ラベル UX 動線」と「源の長文フィールド」が独立した最小 2 軸であることが各ページから到達可能に
+  - Canvas 移行論が描画エンジン単独の話ではなく、物理 / ヒットテスト / state shape の 3 連動コストを評価する話だと明示

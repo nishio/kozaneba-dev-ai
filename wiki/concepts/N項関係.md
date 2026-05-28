@@ -2,10 +2,11 @@
 title: N項関係
 type: concept
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-25
 sources:
   - raw/scrapbox_kozaneba/2021-08-10__pKozaneba.md
   - raw/a.txt
+  - work/kozaneba/src/Global/TAnnotation.ts
 ---
 
 ## 定義
@@ -22,6 +23,21 @@ sources:
 - 「Keichobot の質問キーワード X と回答キーワード Y のペアが、文脈 Z で出現した」
 - 「販売者 P が商品 G を買い手 B に価格 V で時刻 T に売った」(W3C N-ary Relations 例)
 - 「(始点, 関係種別, 終点)」の三項関係 = [辺ラベル](辺ラベル.md) 付きの線
+
+## コード上の現状(2026-05)
+
+[work/kozaneba コード構造調査](../sources/kozaneba-code-architecture.md) で `RTLineAnnot` を確認した結果、Kozaneba の line annotation スキーマは:
+
+```ts
+items: Array(RTItemId)            // 長さ制限なし
+heads: Array(RTArrowHead)          // items と同じ長さで並列、各端点の矢印頭
+is_doubled: Boolean
+label: String.optional()
+```
+
+つまり **データレイヤでは N 個の項を結ぶ関係が表現可能**(`items.length` に制限なし、各端点に矢印頭/無しを指定可能)。実用上「N項関係 UI」が無いのではなく、**「`items[]` を 3 以上にする UI 動線」が無い**だけ、と書き換えた方が正確。データモデル拡張を待たずに UI 実験ができる土台はある。
+
+ただし [関係場](関係場.md) で論じた「項が状況からの分節として出てくる」を扱うには、依然として `items: Array(RTItemId)` 形式そのものが「項が先にある」前提を引きずっており、形式主義から逃げきれない。スキーマがリッチでも、本質的な批判は残る。
 
 ## Kozaneba での実装と「先回りした一般化」
 
