@@ -2,7 +2,7 @@
 title: Canvas 実装への移行検討
 type: theme
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-19
 sources:
   - raw/scrapbox_kozaneba/2024-12-14__Kozanebaのコードを丸ごとo1_Proに入れる.md
   - raw/scrapbox_kozaneba/2025-09-11__pKozaneba2025-08-14.md
@@ -76,6 +76,16 @@ sources:
 - **Plan A**(新規サービス): [Keichobot](../entities/Keichobot.md) / [いどばた](../entities/いどばた.md) / Kozaneba を参考にした全く新しいサービス。データモデルから新規。Kozaneba を deprecate するか並列にするかは未決
 
 Canvas 移行論はもともと「Kozaneba の延長線上で大規模化どうする」の問いだったが、Plan A の登場で問いの形が変わる: 大規模化が必要なのは現 Kozaneba ではなく Plan A 側かもしれず、現 Kozaneba の Canvas 化を急ぐ理由は弱まる。
+
+## 2026-05-19: Canvas は「答え」ではなく 3 案のうちどこで必要かを見極める対象
+
+[3つのストーリー比較](3つのストーリー比較.md) の整理を入れると、Canvas 化は単独の目標ではなくなる。
+
+- **改善ストーリー**では、Canvas は不要かもしれない。300 件規模の作業が DOM 改善で十分速くなるなら、急ぐ理由はない
+- **似たものを新しく作るストーリー**では、Canvas は候補の 1 つ。ただし本質は描画エンジンより Situation / Relation / View のモデル再設計
+- **全く新しいものを作るストーリー**では、入口が対話や読書になる可能性が高く、Canvas は主役ではなく「後から見る view」の 1 つに下がる可能性がある
+
+したがって「Canvas にするか」は最上位の分岐ではなく、どのストーリーに進むかが先に来る判断になる。
 
 ## Sources
 

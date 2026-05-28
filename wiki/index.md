@@ -2,7 +2,7 @@
 title: Index
 type: meta
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-19
 ---
 
 このリポジトリの wiki ページ一覧。新しいページを作るたびに更新する。設計方針は [CLAUDE.md](../CLAUDE.md) を参照。
@@ -108,10 +108,12 @@ updated: 2026-05-16
 - [Clean Relation Elicitation](themes/Clean_Relation_Elicitation.md) — クリーンランゲージ系UIで関係場を漸進的に外化する設計案、Keichobot/Kozaneba 分業の再定義
 - [設計判断ログ 2021](themes/設計判断ログ.md) — 2021年の月別タイムラインと通奏低音
 - [3 Plan 議論](themes/3plan議論.md) — 2026-05-16 の「Kozaneba の次に何を作るか」議論。Plan B(現Kozaneba改造、自分の作業加速)+ Plan A(Keichobot+いどばた+Kozaneba参考の新規サービス)の二段構えに着地
+- [3 つのストーリー比較](themes/3つのストーリー比較.md) — 改善 / 似たものを新規作成 / 全く新しいもの、の3案を比較し、各 MVP と分岐条件を整理
 
 ## Sources(個別ソースの要約)
 
 - [llm-wiki クロスリファレンス](sources/llm-wiki-cross-reference.md) — 並行 wiki [llm-wiki](../../llm-wiki/wiki/index.md) との対応表。Kozaneba 観察から llm-wiki 側で抽出された概念群と、未取り込み候補
+- [Kozaneba git history 2025 要約](sources/kozaneba-git-history-2025.md) — `work/kozaneba` の `git log` を読んだ、2025 年の主要な実装・設計変更の要約
 
 ## Meta
 

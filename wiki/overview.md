@@ -2,7 +2,7 @@
 title: Kozaneba 全体像
 type: overview
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-19
 sources:
   - raw/scrapbox_kozaneba/2021-08-20__かんがえをまとめるデジタル文房具Kozaneba.md
   - raw/scrapbox_kozaneba/2021-09-02__Kozaneba.md
@@ -53,6 +53,14 @@ Kozaneba は単発のプロダクトではなく、長年の試行錯誤の系�
 - **Plan A**: [Keichobot](entities/Keichobot.md) / [いどばた](entities/いどばた.md) / Kozaneba を参考にした **全く新しいサービス**
 
 本 wiki は両方の判断材料を持ち続ける役割になる(Plan B 期間中の Plan A 要求発見の記録器を兼ねる)。
+
+2026-05-19 には、この二段構えをさらに 3 つのストーリーとして整理した([3つのストーリー比較](themes/3つのストーリー比較.md)):
+
+- **改善ストーリー** — 現 Kozaneba を磨き、300 件作業を速くする
+- **似たものを新しく作るストーリー** — Kozaneba の本質を保ったまま、Situation / Relation / View を最初から持つ次世代を作る
+- **全く新しいものを作るストーリー** — Kozaneba で得た洞察を、対話や読書など別の入口を持つ専門家向けツールとして実装する
+
+暫定的な順番は「まず改善し、その観察から次世代を育て、必要なら別入口の新規サービスへ進む」。
 
 詳細は [CLAUDE.md](../CLAUDE.md) を参照。
 

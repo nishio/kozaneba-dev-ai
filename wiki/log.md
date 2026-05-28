@@ -2,7 +2,7 @@
 title: Log
 type: meta
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-19
 ---
 
 時系列の作業ログ。append-only。新しいエントリはファイル末尾に追加する。見出しは `## [YYYY-MM-DD] <action> | <subject>` の形式で統一する(`grep "^## \[" wiki/log.md` でパース可能にするため)。
@@ -221,3 +221,32 @@ updated: 2026-05-16
 - [themes/関係を第一級にする](themes/関係を第一級にする.md) — Kozaneba 設計への含意の末尾に、Plan A が本テーマの直接の実装ターゲットになる旨を追加(relation-flattening 回避まで含む)
 - [themes/Clean Relation Elicitation](themes/Clean_Relation_Elicitation.md) — Open Questions の選択肢に Plan A を追加(2026-05-16 時点で有力)
 - [concepts/源の長文](concepts/源の長文.md) — 新規セクション「Plan B と Plan A の共通基盤としての位置」追加。Plan B 期間の先行実装基盤として位置づけ
+
+## [2026-05-19] query | Kozaneba git log の主要設計変更
+
+- `work/kozaneba/` を一次ソースとして `git log` と主要 commit の diff/stat を確認。
+- 作成: [wiki/sources/kozaneba-git-history-2025.md](sources/kozaneba-git-history-2025.md)
+- 主要整理:
+  - 2025-04 は React/Firebase 更新、Netlify・lockfile・`useEffect` 修正による「生存性の回復」
+  - 2025-08〜09 は Selection menu 強化、merge の意味変更、線ラベル追加による「探索操作と関係操作の再強化」
+  - 線ラベルはデータモデル上は前進したが、入力 UX は未確定のまま揺れている
+- [wiki/index.md](index.md) の Sources に登録。
+
+## [2026-05-19] query | Kozaneba の次に進む 3 ストーリー比較
+
+- nishio の依頼で、「改善」「似たものを新しく作る」「全く新しいものを作る」の 3 案を、Kozaneba の歴史を踏まえて比較。
+- 作成: [wiki/themes/3つのストーリー比較.md](themes/3つのストーリー比較.md)
+- 含めた内容:
+  - 3 案の比較表(守るもの / 捨てるもの / 解決対象 / リスク)
+  - 各案の MVP
+  - どの観察が出たらどの案へ進むべきかの判断基準
+  - 「Aで観察を取り、Bを本命候補に育て、Cを入口戦略として温存する」という暫定見立て
+- [wiki/index.md](index.md) の Themes に登録。
+
+## [2026-05-19] fill back | 3つのストーリー比較を関連 5 ページに浸透
+
+- [overview.md](overview.md) — 3 ストーリーの要点と暫定順序を追記
+- [entities/Kozaneba.md](entities/Kozaneba.md) — Kozaneba を「現役プロダクト + 次世代設計の観察装置」として再位置づけ
+- [themes/Canvas移行の検討.md](themes/Canvas移行の検討.md) — Canvas を最上位目標ではなく、3 ストーリーのどこで必要かを見極める対象として整理
+- [themes/関係を第一級にする.md](themes/関係を第一級にする.md) — relation-first 設計が特に「似たもの新規」ストーリーの中核だと明記
+- [themes/3plan議論.md](themes/3plan議論.md) — 二段構えの整理と、後続の 3 ストーリー比較ページとの役割分担を追記
