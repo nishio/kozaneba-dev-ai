@@ -2,7 +2,7 @@
 title: N項関係
 type: concept
 created: 2026-05-16
-updated: 2026-05-25
+updated: 2026-06-02
 sources:
   - raw/scrapbox_kozaneba/2021-08-10__pKozaneba.md
   - raw/a.txt
@@ -68,6 +68,15 @@ label: String.optional()
 - **RDF 1.2**: triple term で「文について文を述べる」を標準化
 - **ハイパーグラフ研究**: 二項分解では高次の依存関係を保てないと論じられる
 
+## 2026-06: ジャンクションノード描画への切替案
+
+[線UIサーベイ 2026](../themes/線UIサーベイ_2026.md) で hypergraph 可視化の研究系を見たところ、mainstream の whiteboard ツールは hypergraph をネイティブに扱わず、研究系は二つの表現を使う:
+
+1. **Polygon / convex-hull 描画**: N項関係 = 多角形、各頂点がメンバー
+2. **Bipartite / 中間ノード追加**: 「関係ノード」を 1 つ立て、各メンバーと二項線で結ぶ(de facto)
+
+Kozaneba の `items: TItemId[]` モデルは **bipartite 表現と直接対応**。データは現状のまま、レンダリングを **中央ジャンクション + 放射状の線** に変えるだけで、N項関係が「中央の小ノード = 関係本体 / 周囲の線 = メンバー」として視覚的に成立する。これは [関係場](関係場.md) を一級可視化する道筋にもなる。
+
 ## 関連
 
 - [線を引く機能](線を引く機能.md) — Kozaneba での N項関係実装
@@ -75,6 +84,7 @@ label: String.optional()
 - [関係場](関係場.md) — N項関係の限界を超える概念
 - [活用されなかった機能](../themes/活用されなかった機能.md) — N項関係 UI が実用化されなかった話
 - [関係を第一級にする](../themes/関係を第一級にする.md)
+- [線UIサーベイ 2026](../themes/線UIサーベイ_2026.md) — ジャンクションノード描画案と hypergraph 文献
 
 ## Sources
 

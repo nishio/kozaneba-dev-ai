@@ -282,3 +282,34 @@ updated: 2026-05-25
   - 「辺ラベル機能が無い」「N項関係が実装されてない」という古い書きぶりを最新コードに合わせて修正
   - Plan B 期間に着手する改造の起点として「辺ラベル UX 動線」と「源の長文フィールド」が独立した最小 2 軸であることが各ページから到達可能に
   - Canvas 移行論が描画エンジン単独の話ではなく、物理 / ヒットテスト / state shape の 3 連動コストを評価する話だと明示
+
+## [2026-06-01] query | 最新技術知識による実装改善の 3 方向(データ / 線UI / 畳むUI)
+
+- nishio から「今の最新の技術知識で実装を改善したい」として 3 つの問題提起。本人の論点は既に wiki 化済みなので、ドメイン専門家相手の規範に従い、**外向きの角度**(外部ライブラリ・先行ツール・研究文献)を持ち込んで議論。
+- 3 つの軸を並列でリサーチ:
+  - **データ層**: Yjs / Automerge 3 / Loro / Replicache→Zero / Triplit / ElectricSQL / PowerSync / SQLite WASM + sqlite-vec / libSQL / Turso / PGlite / Iroh-blobs / Patchwork
+  - **線 UI**: Miro / FigJam / tldraw / Excalidraw / Whimsical / Obsidian Canvas / Apple Freeform / Heptabase / Kinopio / Lucidchart / draw.io / yEd / OmniGraffle / Tana / Roam / Logseq / mermaid / D2 / Scapple
+  - **畳む UI**: Pad++ / Bret Victor "Magic Ink" / tldraw frames / Figma frames + sections + auto-layout / FigJam sections / Miro frames / Heptabase section + nested wb / Muse / Kosmik / Obsidian Canvas / Apple Freeform / Workflowy / Tana / Magic Lens / Hierarchical Edge Bundling / Notion AI / Miro AI Mind Map
+- 結論を 3 つの新規 theme ページに集約:
+  - [themes/データモデル刷新の選択肢.md](themes/データモデル刷新の選択肢.md) — 「Loro doc + Firebase Storage の CAS」を Plan B 段階移行案、「Loro + SQLite WASM + 自前 CAS」を Plan A 書き直し案として提案
+  - [themes/線UIサーベイ_2026.md](themes/線UIサーベイ_2026.md) — 「複数選択 → 線」は mainstream 不在で守るべき強み、追加で Miro 型ホバーハンドル + FigJam quick-create、辺ラベルは lazy edit、N項関係はジャンクション描画、Kinopio 型 connection-type を検討、と優先度順に整理
+  - [themes/畳むUIの再設計.md](themes/畳むUIの再設計.md) — group を frame に格上げ(隙間問題の根本解)、Heptabase 型 inverse-zoom title で semantic zoom 実装、AI 自動表札(Notion AI 型)、Magic Lens で「開かずに覗く」、Hierarchical Edge Bundling で fold 横断のエッジを残す
+- index.md に 3 ページを Themes セクションに追加。
+- 効果:
+  - 既存の「[源の長文](concepts/源の長文.md) / [線を引く機能](concepts/線を引く機能.md) / [なめらかな畳まれ](concepts/なめらかな畳まれ.md) / [活用されなかった機能](themes/活用されなかった機能.md)」が「何が問題か」までしか語っていなかったところに、**外部実装の比較と具体的な改修案** が追加された
+  - Plan B / Plan A 双方の作業を駆動する判断材料として、データ層 / UI 層の両方で「次に着手すべき最小手数」が明示された
+  - 3 ページが相互に「同時期に進めたサーベイ」として相互リンクしているので、片方を開けば他方に到達できる
+
+## [2026-06-02] fill back | Loro ホスティング選択肢を [データモデル刷新の選択肢] に追記
+
+- 前日のセッション末で残した open question 「Loro provider を誰が書くか」に対し、外部調査を実施。**Loro 公式マネージドサービスは 2026-06 時点で不存在**(Liveblocks / Hocuspocus / y-sweet 相当が無い)、エコシステム規模は Yjs と 2 桁差。
+- 2025 後半の **[Loro Protocol](https://loro.dev/blog/loro-protocol)** 公開で、参照実装(Node SimpleServer / Rust + SQLite)とコミュニティ実装(`@loro-extended/repo`、iroh-loro、typeonce sync-engine-web)が揃ってきた段階。
+- [themes/データモデル刷新の選択肢.md](themes/データモデル刷新の選択肢.md) に「Loro のホスティング選択肢(2026-06)」セクションを追記、3 ルートを整理:
+  - **ルート A. Firestore + Loro binary**(snapshot を bytea で保存、差分を append-only サブコレクション): 移行コスト最小、Plan B 即着手可
+  - **ルート B. Cloudflare Durable Objects + R2**(DO 1 個 = 場 1 個、PartyKit + Loro Protocol frame 転送 ~200-300 行): 将来性◎、Loro Protocol の機能を全部使える
+  - **ルート C. 自前 Node/Rust + Postgres**(`@loro-extended/repo` + Hono + Supabase): 運用負荷中、Yjs の Hocuspocus + Postgres パターンの Loro 版
+- 短期 A / 中期 B / 長期 C の判断を明示。Sources にホスティング関連 URL 9 件追加、index.md の要約を更新。
+- 効果:
+  - データモデル刷新ページが「Loro を採用するとどうやって動かすのか」まで答える状態になった
+  - Plan B 第一歩(Firestore 残しで Loro 化)の実装規模が見える(provider 数百行)
+  - Loro エコシステム未成熟というリスクを明示することで、Yjs を選ぶ判断材料も同時に提供

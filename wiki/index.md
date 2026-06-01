@@ -2,7 +2,7 @@
 title: Index
 type: meta
 created: 2026-05-16
-updated: 2026-05-25
+updated: 2026-06-02
 ---
 
 このリポジトリの wiki ページ一覧。新しいページを作るたびに更新する。設計方針は [CLAUDE.md](../CLAUDE.md) を参照。
@@ -109,6 +109,9 @@ updated: 2026-05-25
 - [設計判断ログ 2021](themes/設計判断ログ.md) — 2021年の月別タイムラインと通奏低音
 - [3 Plan 議論](themes/3plan議論.md) — 2026-05-16 の「Kozaneba の次に何を作るか」議論。Plan B(現Kozaneba改造、自分の作業加速)+ Plan A(Keichobot+いどばた+Kozaneba参考の新規サービス)の二段構えに着地
 - [3 つのストーリー比較](themes/3つのストーリー比較.md) — 改善 / 似たものを新規作成 / 全く新しいもの、の3案を比較し、各 MVP と分岐条件を整理
+- [データモデル刷新の選択肢](themes/データモデル刷新の選択肢.md) — 1 巨大 JSON からの脱出、Yjs/Automerge/Loro/Zero/SQLite-WASM/CAS の比較、Loro ホスティング 3 ルート(Firestore + binary / Cloudflare DO+R2 / 自前 Hono+Postgres)
+- [線UIサーベイ 2026](themes/線UIサーベイ_2026.md) — Miro/FigJam/tldraw/Kinopio/Tana 他 16 ツールの connection 描画パターン分類と Kozaneba 改修案
+- [畳むUIの再設計](themes/畳むUIの再設計.md) — Pad++/Bret Victor/Heptabase/Magic Lens/AI 自動表札による「囲んで畳む」の刷新案
 
 ## Sources(個別ソースの要約)
 

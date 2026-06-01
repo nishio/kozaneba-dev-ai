@@ -2,7 +2,7 @@
 title: Canvas 実装への移行検討
 type: theme
 created: 2026-05-16
-updated: 2026-05-25
+updated: 2026-06-02
 sources:
   - raw/scrapbox_kozaneba/2024-12-14__Kozanebaのコードを丸ごとo1_Proに入れる.md
   - raw/scrapbox_kozaneba/2025-09-11__pKozaneba2025-08-14.md
@@ -97,6 +97,16 @@ Canvas 移行論はもともと「Kozaneba の延長線上で大規模化どう�
 - 注釈レイヤは SVG で、`AnnotationLayer.tsx` が `pointerEvents: "none"` で全イベントを背景に通す設計。Canvas 化するときに「線をクリックして編集」を成立させるなら、ヒットテストを自前で書く必要があり、これは Devin が WebGL を避けた理由(テキスト描画と並ぶ再実装コスト)と同じ性質の負担
 
 つまり Canvas 化を仮にやるとして、**書き直さなければならないのは描画だけでなく、(a) 物理アルゴリズム、(b) ヒットテスト、(c) 状態管理のスコープ** の 3 つが連動する。Devin の「WebGL 推奨しない」判断はこの 3 点コストを暗黙に評価したものとして読める。
+
+## 2026-06: データ / 線UI / 畳むUI のサーベイで「Canvas 化単独では足りない」が明確化
+
+[データモデル刷新の選択肢](データモデル刷新の選択肢.md) / [線UIサーベイ 2026](線UIサーベイ_2026.md) / [畳むUIの再設計](畳むUIの再設計.md) の 3 つの外部サーベイで、Canvas 化と独立に対処すべき改修が明らかになった:
+
+- **データサイズ問題**: Canvas 化と無関係に「Loro doc(構造)+ Firebase Storage(content-addressable blob)」の二層分離で解ける。Plan B 段階移行案
+- **線 UI の貧しさ**: Canvas 化以前に「Miro 型ホバーハンドル」「描いた瞬間 inline caret(辺ラベル)」「ジャンクションノード描画(N項関係)」「Kinopio 型 connection-type」を DOM 実装で先行できる
+- **畳む UI の隙間問題**: group を frame に格上げ(自前 bounding rect)、Heptabase 型 inverse-zoom title、AI 自動表札 — これも Canvas 化以前に DOM で実装可能
+
+つまり Canvas 化は **「(a) 物理 / (b) ヒットテスト / (c) state shape」の 3 連動コスト** を払う判断であり、上記改修の多くは **Canvas 化を待たずに価値を出せる**。Canvas 化の動機は「2000 枚 → 10000 枚以上」のレンダリング性能と、フォルダレベルの最適化に絞られる。
 
 ## Sources
 
