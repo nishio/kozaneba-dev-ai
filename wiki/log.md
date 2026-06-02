@@ -600,3 +600,10 @@ updated: 2026-05-25
 - nishio の整理: 1 座標ロジック単体テストに今回の知見を入れる、2 Kozaneba 本体側を required CI にする、3 CI gate 安定後に Node / CRA 脱出。
 - [themes/テスト改善計画.md](themes/テスト改善計画.md) をこの3段階に再構成。
 - Movidea legacy は通すべきか棚卸し対象、Playwright は concrete gap が出るまで入れない、Cypress helper 整理は残す spec を決めた後に変更。
+
+## [2026-06-03] query | GitHub Issue 全文読解からの知見を Wiki 化
+
+- `nishio/kozaneba` の AI 生成 open Issue 20 件を全文読解し、5 件だけ残して 15 件を理由コメント付きで close した判断を [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) に保存。
+- 残した Issue は #4 console log、#12 browser extension docs、#13 CI/CD、#17 test coverage、#25 performance profiling。いずれも現在のコード事実に接続し、次の一手を小さく切れる。
+- 閉じた Issue は、古い前提、性能系の手段先行、UX/i18n/accessibility の一般論、大規模リファクタ単独 Issue として分類。
+- 学び: AI が生成した Issue は実行キューではなく提案の束であり、全文読解・コード照合・計測前提の分離・再発行条件の明示を経て Plan B の backlog に変換する必要がある。
