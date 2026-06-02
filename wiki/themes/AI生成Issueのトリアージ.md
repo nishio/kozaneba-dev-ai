@@ -26,7 +26,7 @@ sources:
 
 全文を読むと、これらは具体的な障害報告というより、AI が一般的な改善カテゴリを分割して作った backlog だった。内容には有用な観点も含まれるが、現在のコード事実・優先順位・実行単位に照らすと、そのまま「やること」にしてはいけない。
 
-整理後に残した open Issue は次の 5 件:
+初回整理後に残した open Issue は次の 5 件:
 
 - [#4 本番環境のコンソールログ削除](https://github.com/nishio/kozaneba/issues/4)
 - [#12 ブラウザ拡張機能のドキュメント整備](https://github.com/nishio/kozaneba/issues/12)
@@ -36,9 +36,9 @@ sources:
 
 残り 15 件は、古い前提、性能系の重複、または広すぎる一般論として理由コメント付きで close した。
 
-その後、2026-06-03 に PR #41〜#44 で CI workflow、required checks、Node 24、Vite 移行まで完了したため、#13 は実質的に完了候補になった。Issue 側には、[CI安定化とVite移行 2026-06](CI安定化とVite移行_2026-06.md) と PR #41〜#44 を根拠として完了コメントを残して閉じるのが次の housekeeping になる。
+その後、2026-06-03 に PR #41〜#44 で CI workflow、required checks、Node 24、Vite 移行まで完了したため、#13 は完了コメントを付けて close した。さらに PR #45 で production console log cleanup を実施し、#4 も close された。
 
-次に実装するなら #4 production console log cleanup を先に進める。Vite build で見えた direct `eval` warning は、[UserScript](../concepts/UserScript.md) の仕様変更ではなく、既存の intentional なコード実行をどう明示するかという小さな後続作業として扱う。
+2026-06-03 時点で残る open Issue は #12 / #17 / #25 の 3 件。Vite build で見えた direct `eval` warning は、[UserScript](../concepts/UserScript.md) の仕様変更ではなく、既存の intentional なコード実行をどう明示するかという小さな後続作業として扱う。
 
 ## 得られた知見
 
@@ -66,13 +66,13 @@ Issue #6 は「React 17 / Firebase 8 が古い」という前提だったが、�
 
 残した Issue は、現在のコードに直接根拠があり、初手を小さく切れる。
 
-- #4: `console.log` は実際に多数残っており、[dev_log](../../work/kozaneba/src/utils/dev.ts) も既にある
+- #4: `console.log` は実際に多数残っており、[dev_log](../../work/kozaneba/src/utils/dev.ts) も既にある。PR #45 で対応済み
 - #12: [browser_extension/kintone_tampermonkey.js](../../work/kozaneba/browser_extension/kintone_tampermonkey.js) は存在するが [README](../../work/kozaneba/README.md) に説明がない
-- #13: `.github/workflows` がなく、[codex-preflight](../../work/kozaneba/scripts/codex-preflight.sh) などを CI 化する入口がある
-- #17: Cypress E2E はあるが unit test は薄く、[テスト改善計画](テスト改善計画.md) に接続できる
+- #13: `.github/workflows` がなく、[codex-preflight](../../work/kozaneba/scripts/codex-preflight.sh) などを CI 化する入口がある。PR #41〜#44 で対応済み
+- #17: Cypress E2E はあるが unit test は薄く、[テスト改善計画](テスト改善計画.md) に接続できる。広い coverage issue としてではなく、座標変換・hit test・undo/redo・保存復元などの小 regression と、旧 Movidea spec の棚卸しに分解して扱う
 - #25: 性能改善の前に、まずプロファイルという観測作業が必要
 
-この 5 件は「完璧な改善テーマ」ではなく、**次の一手が明確な Issue** である。
+この 5 件は「完璧な改善テーマ」ではなく、**次の一手が明確な Issue** だった。#13 と #4 は、その後の小 PR 連鎖で完了した。
 
 ### 3. 性能改善は手段ではなく観測から始める
 

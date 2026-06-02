@@ -2,7 +2,7 @@
 title: Log
 type: meta
 created: 2026-05-16
-updated: 2026-05-25
+updated: 2026-06-03
 ---
 
 時系列の作業ログ。append-only。新しいエントリはファイル末尾に追加する。見出しは `## [YYYY-MM-DD] <action> | <subject>` の形式で統一する(`grep "^## \[" wiki/log.md` でパース可能にするため)。
@@ -627,3 +627,17 @@ updated: 2026-05-25
 - nishio の判断として、Vite build で見えた direct `eval` warning は [concepts/UserScript.md](concepts/UserScript.md) の仕様変更として扱わないことを記録。
 - [themes/CI安定化とVite移行_2026-06.md](themes/CI安定化とVite移行_2026-06.md) の学びと次アクションを更新し、#13 完了処理、#4 production console log cleanup、direct `eval` warning の小さな後続作業という順序に整理。
 - [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) に、direct `eval` warning は既存の intentional な UserScript 実行を維持したまま明示・整理する後続作業だと追記。
+
+## [2026-06-03] query | #17 と旧 Movidea テスト棚卸し
+
+- nishio の指摘: #17「テストカバレッジの向上」は、座標変換・hit test・undo/redo・保存復元などの小さな regression に分解し、その際に旧 Movidea のテスト資産も棚卸しするべき。
+- `work/kozaneba/cypress/e2e/movidea/` は 23 specs / 1452 lines。座標 / drag / group、selection / hit test、dialog / tutorial、import / save / restore / auth、価値が薄い・コメント化済み、に分類する方針へ整理。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) に、各 Movidea spec を promote / keep-quarantined / delete / rewrite-before-decision に分ける判断軸を追記。
+- [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md)、[themes/CI安定化とVite移行_2026-06.md](themes/CI安定化とVite移行_2026-06.md)、[wiki/index.md](index.md) の #17 説明も同じ方針に更新。
+
+## [2026-06-03] query | #13 と #4 の完了
+
+- Issue #13 は、PR #41〜#44 と main CI success を根拠に完了コメントを付けて close。
+- Issue #4 は、PR #45 `Route production console logs through dev logger` で runtime `console.log` / `console.time` / `console.timeEnd` を `dev_log` / `dev_time` に寄せ、merge により close。
+- PR #45 は local の `npm test`、`npm run build`、`npm run codex:preflight`、`npm audit --audit-level=moderate`、PR CI、main post-merge CI が success。
+- [themes/CI安定化とVite移行_2026-06.md](themes/CI安定化とVite移行_2026-06.md) と [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) を更新し、残る open Issue は #12 / #17 / #25 の 3 件だと整理。
