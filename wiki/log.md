@@ -367,3 +367,15 @@ updated: 2026-05-25
 - 追加対応:
   - 当初 `#blank` を試用 URL として案内したが、`#blank` は空の場なので白いキャンバスになる。確認しやすいよう `#tinysample` を 2 こざね + 1 線のサンプルに変更
 - [themes/Plan_B試行_2026-06.md](themes/Plan_B試行_2026-06.md) の結果・含意セクションに初回実装の観察を追記。
+
+## [2026-06-02] implement | #blank 表示と Cypress 実行環境の再確認
+
+- nishio の指摘: `#blank` でも AppBar / StatusBar は表示されるべきで、完全な白画面なら UI が落ちている。Cypress 未実行のまま人間に確認要求するのも不適切。
+- 再確認:
+  - headless Chrome screenshot で `http://localhost:3000/#blank` の AppBar / DEV / Help / StatusBar が見えることを確認
+  - Cypress spec に `#blank` の AppBar / canvas 表示確認を追加
+  - Cypress 起動不能の原因は `ELECTRON_RUN_AS_NODE=1`。`env -u ELECTRON_RUN_AS_NODE` で外すと Cypress 12.4.0 は起動する
+  - `env -u ELECTRON_RUN_AS_NODE npx cypress run --spec cypress/e2e/kozaneba/test_line_label.cy.ts`: 3 tests pass
+- 修正:
+  - `#tinysample` のサンプル変更は本質から外れるので `work/kozaneba` では revert
+  - Plan B ページの検証結果を「Cypress 未実行」から「Cypress pass」に更新
