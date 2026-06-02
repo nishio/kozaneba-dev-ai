@@ -113,6 +113,7 @@ updated: 2026-06-02
 - [線UIサーベイ 2026](themes/線UIサーベイ_2026.md) — Miro/FigJam/tldraw/Kinopio/Tana 他 16 ツールの connection 描画パターン分類と Kozaneba 改修案
 - [畳むUIの再設計](themes/畳むUIの再設計.md) — Pad++/Bret Victor/Heptabase/Magic Lens/AI 自動表札による「囲んで畳む」の刷新案
 - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験
+- [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、UI テスト helper 整備方針の整理
 
 ## Sources(個別ソースの要約)
 

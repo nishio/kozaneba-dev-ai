@@ -431,3 +431,10 @@ updated: 2026-05-25
 - `origin/main` (`5de81c2`) を別 worktree + port 3001 で確認し、`env -u ELECTRON_RUN_AS_NODE npx cypress run --config baseUrl=http://localhost:3001,video=false` は `39 specs 中 20 specs failed`。
 - ローカル main (`898daf2`) は追加した line label spec を含めて `40 specs 中 20 specs failed`。追加 spec は通っており、Cypress 失敗は既存ベースライン由来と判断。
 - 含意: 新規機能より先に、CI 必須 subset / legacy・emulator 依存 spec の quarantine / UI テスト helper 整備を決める必要がある。
+
+## [2026-06-02] query | Kozaneba テスト基盤調査の theme 化
+
+- コード/CI/Cypress 調査で分かったことを [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に整理。
+- 内容: GitHub Actions がアプリテストを走らせていない事実、Netlify が build のみで test しないこと、`origin/main` の Cypress 既存ベースライン失敗、失敗分類(Firebase emulator / AddKozaneDialog / pointer-events / pixel exact / legacy movidea)。
+- Firebase emulator について、`firebase.json` には Auth 9099 / Firestore 8080 / Functions 5001 の設定があるが、調査時点では CLI と emulator 起動がないことを明記。
+- 含意: Plan B の次工程は新機能追加ではなく、CI 必須 subset、emulator 付き integration test、legacy spec quarantine、UI test helper 整備を先に固める。
