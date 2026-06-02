@@ -423,3 +423,11 @@ updated: 2026-05-25
 - `npm run codex:preflight`: pass。
 - 含意: 今後の Kozaneba 本体実装では、機能改修の前に preflight を通す。preflight が落ちたら環境整備を優先する。
 - `work/kozaneba` commit: `898daf2 Add Codex implementation preflight`
+
+## [2026-06-02] query | CI と Cypress ベースライン確認
+
+- `work/kozaneba` には `.github/workflows/` がなく、GitHub Actions は GitHub 管理の `CodeQL` / `Dependabot Updates` のみ。PR #36 も Netlify deploy preview 系 check だけで、`npm test` / Cypress は走っていない。
+- `netlify.toml` の build command は `CI=false npm install --legacy-peer-deps && npm run build` で、テストは実行しない。
+- `origin/main` (`5de81c2`) を別 worktree + port 3001 で確認し、`env -u ELECTRON_RUN_AS_NODE npx cypress run --config baseUrl=http://localhost:3001,video=false` は `39 specs 中 20 specs failed`。
+- ローカル main (`898daf2`) は追加した line label spec を含めて `40 specs 中 20 specs failed`。追加 spec は通っており、Cypress 失敗は既存ベースライン由来と判断。
+- 含意: 新規機能より先に、CI 必須 subset / legacy・emulator 依存 spec の quarantine / UI テスト helper 整備を決める必要がある。
