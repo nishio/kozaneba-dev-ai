@@ -325,3 +325,27 @@ updated: 2026-05-25
   - raw/ 直下の 2 ファイルが両方とも内容を表す名前に(`init.txt` / `関係UI議論_GPT.md`)
   - 今後の ingest で同じプレースホルダ運用が起きないようガードレール追加
   - 公開リポジトリで raw/ を眺めた人にも内容が伝わる
+
+## [2026-06-02] query | より良くするための計画 → Plan B 試行(辺ラベル UI)に決定
+
+- 「Kozaneba を改善するか / 新規プロダクトを作り直すか」の判断土台を整える進め方を相談。
+- まず重い 5 段階ロードマップ(Phase 1: 判断フレーム化 → Phase 5: 分岐判断記録)を提示したが、nishio の判断:
+  - **Plan A は別途。まず Plan B を一手だけ試す**
+  - **仮説**: 賢い AI Agent は過去実装の悪いところを簡単に直す
+  - 重い計画ではなく **1 回の実験で仮説検証** が本質
+- 最初の題材を 4 候補(辺ラベル UI / 線UI / データモデル刷新 / 畳むUI)から選んでもらい、**辺ラベル UI** に決定。境界明確・スキーマ済み・実用価値高・失敗してもダメージ小。
+- 新規ページ [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) を作成:
+  - AI Agent に渡せる仕様(必須要件 5 / アンチパターン 3 / 推奨パターン 3)
+  - 既知の技術障害(`AnnotationLayer.tsx` の `pointerEvents: "none"` + `is_clickable` 切替)とその代替案 3 つ
+  - 成功条件チェックリスト 7 項目
+  - 観察ポイント(どこで詰まったか / 人間介入量 / 驚き / 仮説への感触)を試行後に記録する placeholder
+- 効果:
+  - wiki が「考えるだけ」から「実装に橋渡しする」モードに進む足場ができた
+  - 試行結果を同じページに追記すれば、仮説検証の生データが wiki に蓄積される
+
+## [2026-06-02] query | Plan B 試行仕様の曖昧点レビュー
+
+- [themes/Plan_B試行_2026-06.md](themes/Plan_B試行_2026-06.md) を、[sources/kozaneba-code-architecture.md](sources/kozaneba-code-architecture.md) と最新化済み `work/kozaneba/` main に照らして確認。
+- `work/kozaneba/` は `git fetch origin` / `git pull --ff-only` の結果 `Already up to date`。現 HEAD は `5de81c2`。
+- 指摘候補: `line_start != null` は現コードでは不正確で、未設定値は `""`。また `LineAnnot.tsx` は `custom.is_clickable` を見ず `const is_clickable = false` 固定なので、仕様の技術前提を補足した方がよい。
+- 追加で、表示本体は `Line.tsx` ではなく `LineAnnot.tsx`、保存には `mark_local_changed()` が必要、inline 編集 UI の確定/キャンセル/ショートカット干渉を明示した方が AI Agent の実装ぶれを減らせると整理。
