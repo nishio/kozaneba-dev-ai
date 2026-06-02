@@ -38,6 +38,7 @@ nishio が長年にわたり開発してきた「かんがえをまとめるデ�
 - Kozaneba 本体コードの local clone を置く。LLM がコード構造や現行実装を確認するときの一次参照。
 - 標準の置き場所は `work/kozaneba/`。必要なら `git fetch origin && git pull --ff-only` で最新化してから参照する。
 - `work/` はローカル作業領域なので git には含めない。
+- 実装・再現確認・テストなど新しい作業を始める前に、対象 clone の `git status --short` を確認する。dirty な場合は既存変更をユーザー作業として扱い、そこで作業を始めず、`git worktree add --detach work/<目的名> HEAD` などで clean worktree を作って隔離して進める。
 
 **wiki/**
 - LLM がすべて生成・更新する。手書きしない。

@@ -113,13 +113,14 @@ updated: 2026-06-02
 - [線UIサーベイ 2026](themes/線UIサーベイ_2026.md) — Miro/FigJam/tldraw/Kinopio/Tana 他 16 ツールの connection 描画パターン分類と Kozaneba 改修案
 - [畳むUIの再設計](themes/畳むUIの再設計.md) — Pad++/Bret Victor/Heptabase/Magic Lens/AI 自動表札による「囲んで畳む」の刷新案
 - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験
-- [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、UI テスト helper 整備方針の整理
+- [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、状態モデル中心のキャンバステスト戦略、UI テスト helper 整備方針の整理
 
 ## Sources(個別ソースの要約)
 
 - [llm-wiki クロスリファレンス](sources/llm-wiki-cross-reference.md) — 並行 wiki [llm-wiki](../../llm-wiki/wiki/index.md) との対応表。Kozaneba 観察から llm-wiki 側で抽出された概念群と、未取り込み候補
 - [Kozaneba git history 2025 要約](sources/kozaneba-git-history-2025.md) — `work/kozaneba` の `git log` を読んだ、2025 年の主要な実装・設計変更の要約
 - [Kozaneba コード構造調査 2026-05](sources/kozaneba-code-architecture.md) — `work/kozaneba/` 現コードの構造、Item/Annotation スキーマ、物理演算実装、辺ラベルや N項関係がスキーマ上は実装済みである事実
+- [キャンバス状態テスト戦略 2026-06](sources/canvas-state-testing-strategy-2026-06.md) — ピクセル単位 E2E ではなく world 座標・状態モデル・イベント列を主対象にするキャンバスアプリのテスト設計メモ
 
 ## Meta
 

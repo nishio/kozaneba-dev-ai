@@ -457,3 +457,69 @@ updated: 2026-05-25
 - 学びとして、`テストが通る` の主語を gate ごとに分けること、CI がなければ main の Cypress failure は自然に蓄積すること、Firebase emulator 導入は compat import / early auth emulator connection も含むことを整理。
 - Cypress の actionability failure が実 UI の欠陥を示す場合があること、direct trigger と実ユーザー操作を混同しないこと、pixel exact assertion は最後の手段にすることを明文化。
 - 次の一手として、全 Cypress ではなく `codex:preflight` と `cypress:emulator-smoke` を GitHub Actions に載せる方針を記録。
+
+## [2026-06-02] query | Movidea 系テストを使っていたか
+
+- [entities/Movidea](entities/Movidea.md) と [themes/系譜](themes/系譜.md) では、Movidea は Regroup をテスト可能に作り直した前身で、Cypress + React-N / Firebase Auth・Firestore のテストがあったと整理済み。
+- 現行 `work/kozaneba` には `cypress/e2e/movidea/` spec が 23 本残っているが、`.github/workflows/` はなく、CI の必須 gate としては使われていない。
+- `npm run cypress:emulator-smoke` は `movidea/login.cy.ts` と `movidea/save.cy.ts` を含むため、Movidea 系の一部は smoke test として再利用されている。
+- ただし [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) の通り、全件は legacy 座標期待値 / pointer-events / 旧 UI 前提でまだ落ちるため、現行品質 gate とは分けて扱う必要がある。
+
+## [2026-06-02] query | Movidea 以外の Cypress は通っているか
+
+- `env -u ELECTRON_RUN_AS_NODE npx firebase emulators:exec --only auth,firestore "env -u ELECTRON_RUN_AS_NODE npx cypress run --spec 'cypress/e2e/kozaneba/*.cy.ts' --config baseUrl=http://localhost:3000,video=false"` を実行。
+- 結果は `17 specs 中 1 spec failed`, `30 tests 中 1 test failed`。
+- 落ちたのは `cypress/e2e/kozaneba/test_drag.cy.ts` の `bug fix: drag out from nested groups(drag G1 in/out)` だけ。`cy.testid("1").should("hasPosition", [225, 225])` で、期待 x=225 に対して実測 x=25。
+- したがって Movidea 以外も全通ではないが、失敗は既知分類の nested drag 座標期待値 1 件に限定される。
+
+## [2026-06-02] query | test_drag failure は前から落ちているか
+
+- `origin/main` (`5de81c2`) を別 worktree + port 3001 で起動し、`cypress/e2e/kozaneba/test_drag.cy.ts` 単体を実行。
+- 結果は現行 HEAD と同じく `7 tests 中 1 failed`。失敗も同じ `bug fix: drag out from nested groups(drag G1 in/out)` で、期待 x=225 に対して実測 x=25。
+- `git blame` では該当 test は 2021-12-27 の `refactor tests` 由来。2023-01-27 の `ignore some tests` では隣接する `drag G2` と `closed group in another group` がコメントアウトされたが、この `drag G1 in/out` は残されていた。
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に、これは少なくとも PR #36 merge 時点で既に落ちており、基本的な nested drag regression として扱うべきだと追記。
+
+## [2026-06-02] query | test_drag failure の bisect
+
+- `891f36d` (`ignore some tests`) は `cypress/e2e/kozaneba/test_drag.cy.ts` 7 tests 全通。`origin/main` (`5de81c2`) は `drag G1 in/out` で同じ `expected x:25 is 225` failure。
+- 通常の checkout + lockfile 固定で最初に再現可能な bad commit は `ceea496` (`依存パッケージの更新: yarn.lockとpackage-lock.jsonを追加`)。この commit 自体は lockfile のみ。
+- `6f440f4` (`React 17→18、Firebase 8→9`) から `3785e91` までは package.json / yarn.lock 不整合で frozen install できず skip。ただし `6f440f4` を別 worktree で non-frozen install すると同じ target failure を再現。
+- 結論: 実質的な退行は `6f440f4` の大規模依存更新に入った。React 18 / `createRoot` / styled-components 6 / MUI 更新のどれが直接原因かは未分離。
+
+## [2026-06-02] ingest | キャンバス状態テスト戦略
+
+- チャットで共有された「より良いテスト」メモを [raw/2026-06-02_キャンバス状態テスト戦略.md](../raw/2026-06-02_キャンバス状態テスト戦略.md) として保存。
+- [sources/canvas-state-testing-strategy-2026-06.md](sources/canvas-state-testing-strategy-2026-06.md) を作成し、状態モデル、world/screen 座標変換、イベント列、E2E、visual regression の役割分担を要約。
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に、pixel exact assertion の代替方針として「world 座標・状態モデルを主テスト対象にする」節を追記。
+- 現行 Kozaneba の `window.movidea` / `cy.getGlobal()` は test API 的な入口として使えるが、`world_to_screen` と `zoom_around_pointer` は pure helper 化して unit test しやすくする余地があると整理。
+
+## [2026-06-02] query | Cypress / Playwright / Webwright と単体テスト化
+
+- Kozaneba では、短期的には既存 Cypress 資産を捨てず、smoke / regression の薄い E2E gate として整理するのが妥当。
+- Playwright は clean-slate browser context、auto-waiting、parallel 実行が強く、将来の少数の本物 E2E や新規プロダクトでは第一候補になりうる。
+- Webwright は Playwright を使う AI browser agent framework であり、CI の決定的テスト基盤ではなく、探索・テスト生成・調査補助として扱うのがよい。
+- 重要なのはツール選定より、座標変換・drag/drop・selection・nested group などを world 座標 / state invariant の unit / integration test に寄せ、E2E は代表操作だけにすること。
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に「Cypress / Playwright / Webwright の使い分け」として file back。
+
+## [2026-06-02] query | 公開版の nested drag を人間がテストすべきか
+
+- `https://kozaneba.netlify.app/#blank` は HTTP 200 を返すことを確認。
+- 既存 `test_drag.cy.ts` を公開 URL に向けると、production build には `window.movidea` がないため全 7 cases が hook 不在で失敗し、drag 挙動の判定にはならなかった。
+- `window.kozaneba` / `try_to_import_json` と UI 操作を使った一時 Cypress check も試したが、既知 bad のローカル main でも通ったため、`drag G1 in/out` regression の検出器としては不採用。
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に、公開版確認は自動テストだけでは断定できず、人間が nested group drag をピンポイントで実 UI 確認するのが最短だと追記。
+
+## [2026-06-02] query | A(B(C)) nested drag の人間観察
+
+- nishio から、`A(B(C))` を作って `C` を root に出した後、`A` の sibling としては自然だが `B` の sibling にした時に位置が不自然になる、という実 UI 観察を受けた。
+- `drag_drop_item.ts` と `drag_drop_item_into_group.ts` を確認し、root への drop と group への drop で親 offset の扱いが分かれていることを確認。
+- `get_total_offset_of_parents.ts` は draft state `g` を受け取るが、親探索で `find_parent(current_parent)` に state を渡していないため、更新中の親子関係と現在 state が混ざる疑いがある。
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に、人間観察と次の優先調査点として追記。
+
+## [2026-06-02] query | nested drag offset 修正
+
+- dirty な `work/kozaneba` は触らず、detached clean worktree `work/kozaneba-drag-investigation` を使って修正。
+- `drag_drop_item_into_group.ts` の root → nested group branch で、drop 先 group 単体の `position` ではなく親 chain 全体の offset を引くように変更。
+- `get_total_offset_of_parents.ts` では `find_parent(current_parent, g)` を使い、渡された state と親探索をそろえた。
+- `test_drag.cy.ts` に offset 付き `A(B(C))` 相当の regression を追加し、既存 `drag G1 in/out` は React 18 の描画安定後に次 drag を始めるよう調整。
+- 検証: `npm test -- --watchAll=false` pass、`npm run build` pass、`test_drag.cy.ts` は 8 tests pass、Firebase emulator 付き `cypress/e2e/kozaneba/*.cy.ts` は 17 specs / 31 tests pass。
+- commit `5b19a29` を `fix/nested-drag-offset` として push し、draft PR [nishio/kozaneba#39](https://github.com/nishio/kozaneba/pull/39) を作成。

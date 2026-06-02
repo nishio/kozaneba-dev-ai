@@ -4,13 +4,32 @@ type: theme
 created: 2026-06-02
 updated: 2026-06-02
 sources:
+  - raw/2026-06-02_キャンバス状態テスト戦略.md
+  - wiki/sources/canvas-state-testing-strategy-2026-06.md
+  - https://docs.cypress.io/app/core-concepts/retry-ability
+  - https://playwright.dev/docs/actionability
+  - https://github.com/microsoft/Webwright
+  - https://webdriver.io/docs/why-webdriverio/
   - work/kozaneba/package.json
   - work/kozaneba/netlify.toml
   - work/kozaneba/firebase.json
   - work/kozaneba/cypress.config.ts
+  - work/kozaneba/cypress/e2e/kozaneba/test_drag.cy.ts
+  - work/kozaneba/cypress/e2e/kozaneba/test_zoom.cy.ts
   - work/kozaneba/cypress/support/e2e.ts
   - work/kozaneba/src/Cloud/init_firebase.ts
+  - work/kozaneba/src/dimension/world_to_screen.ts
+  - work/kozaneba/src/Event/onWheel.tsx
+  - work/kozaneba/src/Event/fast_drag_manager.ts
+  - work/kozaneba/src/Event/drag_drop_item.ts
+  - work/kozaneba/src/Event/drag_drop_item_into_group.ts
+  - work/kozaneba/src/Event/get_total_offset_of_parents.ts
+  - work/kozaneba-drag-investigation/src/Event/drag_drop_item_into_group.ts
+  - work/kozaneba-drag-investigation/src/Event/get_total_offset_of_parents.ts
+  - work/kozaneba-drag-investigation/cypress/e2e/kozaneba/test_drag.cy.ts
   - work/kozaneba/src/Global/exposeGlobal.ts
+  - work/kozaneba/src/API/KozanebaAPI.ts
+  - work/kozaneba/src/API/run_user_script.ts
   - work/kozaneba/src/Dialog/AddKozaneDialog/AddKozaneDialog.tsx
 ---
 
@@ -202,6 +221,56 @@ npm run cypress:emulator-smoke
 - `selection-view` / MUI menu の旧操作前提
 - `visit_reset` の old API expectation
 
+`kozaneba/test_drag.cy.ts` の失敗は、Movidea legacy ではなく Kozaneba 側にも残る failure である。`cypress/e2e/kozaneba/*.cy.ts` だけを Firebase emulator 付きで実行すると `17 specs 中 1 spec failed`, `30 tests 中 1 test failed` で、落ちるのは `bug fix: drag out from nested groups(drag G1 in/out)` のみだった。
+
+同じ spec を `origin/main` (`5de81c2`) の別 worktree + port 3001 でも実行し、同じ `expected x:25 is 225` failure を確認した。したがって、この失敗は 2026-06-02 のローカル変更で混入したものではなく、少なくとも PR #36 merge 時点の `origin/main` に既に存在する。
+
+ただし、これは「最初から無価値なテスト」ではない。該当ケースは 2021-12-27 の `refactor tests` 由来で、nested group から group を出し入れした後に内部 kozane の座標が壊れないことを見る回帰テストである。2023-01-27 の `ignore some tests` では隣接する `drag G2` と `closed group in another group` はコメントアウトされたが、この `drag G1 in/out` は残されていた。つまり、現行 UI で本当に不要になったと判断するまでは、基本的な nested drag regression として扱うべきである。
+
+### `test_drag` failure の bisect 結果
+
+`891f36d` (`ignore some tests`, 2023-01-27) は `test_drag.cy.ts` 7 tests が全通する。`origin/main` (`5de81c2`) は同じ spec の `drag G1 in/out` で落ちる。
+
+手動 bisect の結果、通常の checkout + lockfile 固定で最初に再現可能な bad commit は `ceea496` (`依存パッケージの更新: yarn.lockとpackage-lock.jsonを追加`) だった。この commit 自体は lockfile 追加・更新のみで、ソースコードは触っていない。
+
+その直前の範囲では `6f440f4` (`依存パッケージの更新: React 17→18、Firebase 8→9`) から `3785e91` までが、`package.json` と `yarn.lock` の不整合により frozen install できず skip になった。そこで `6f440f4` を別 worktree で non-frozen `yarn install` して確認すると、同じ `expected x:25 is 225` failure が再現した。
+
+したがって、実質的な退行は `6f440f4` の大規模依存更新に入ったと見るのが妥当である。差分には React 17→18、ReactDOM.render→`createRoot`、styled-components 5→6、MUI 5 alpha→beta、Firebase 8→11 系への移行が含まれる。今回の bisect だけでは React 18 / styled-components / MUI のどれが座標差分の直接原因かまでは分離していないが、Firebase 変更単独ではなく、フロントエンド依存・描画レイヤの更新に伴う nested drag 座標 regression と見るべきである。
+
+### 公開版での確認可否
+
+`https://kozaneba.netlify.app/#blank` は 2026-06-02 時点で HTTP 200 を返す。ただし、既存の `test_drag.cy.ts` を公開 URL に向けても、production build では `window.movidea` が存在しないため、全ケースが test hook 不在で失敗する。これは `window.movidea` が `exposeGlobalForTest()` 経由で development build のみ公開されるためで、公開版の drag 挙動そのものを判定した結果ではない。
+
+公開版でも `window.kozaneba` は公開 API として存在するので、`try_to_import_json` と UI 操作を組み合わせた一時 Cypress check も試した。しかしこの check は既知 bad のローカル main でも通ったため、`drag G1 in/out` regression の検出器としては使えない。
+
+したがって、現状の公開版がこの nested drag regression を実際に踏むかは、既存自動テストだけでは断定できない。確認するなら、人間が実 UI で「ネストした group を作る」「内側 group を外へ出して、外側 group に戻す」「中の kozane が横に飛ばないか」をピンポイントで見るのが最短である。
+
+### 人間テスト観察: `A(B(C))`
+
+nishio の実 UI 確認では、`A(B(C))` というネスト group を作り、`C` を root にドラッグした後、`A` の sibling として扱う場合は自然だが、`B` の sibling にした時には位置が不自然になる。
+
+これは `test_drag.cy.ts` の失敗が単なる古い pixel exact assertion ではなく、「root に出す経路」と「group 内の sibling に戻す経路」で座標変換の扱いが違うという現行 UI 上の問題である可能性を強める。
+
+コード上の分岐としては、root への drop は `drag_drop_item.ts` で `get_total_offset_of_parents(parent, g)` を足している。一方、group への drop は `drag_drop_item_into_group.ts` で、旧親がある場合は旧親 offset と新親 offset を使うが、root から group に入れる場合は `group_draft.position` だけを引いている。また、`get_total_offset_of_parents.ts` は `g` を受け取る一方で、親探索には `find_parent(current_parent)` を state 引数なしで呼んでおり、`updateGlobal` の draft state と現在 state が混ざる余地がある。ここは次に test を状態ベースで切る時の優先調査点である。
+
+### clean worktree での修正結果
+
+`work/kozaneba` が dirty だったため、`work/kozaneba-drag-investigation` を detached clean worktree として作成し、そこで修正・検証した。
+
+修正内容:
+
+- `get_total_offset_of_parents.ts` の親探索で `find_parent(current_parent, g)` を使い、offset 計算を渡された state にそろえた。
+- `drag_drop_item_into_group.ts` の root → group branch で、`group_draft.position` だけではなく `get_total_offset_of_parents(group_id, g)` を引くようにした。これにより、root に出した group を nested group に入れる時も、親 chain 全体の offset を差し引く。
+- `test_drag.cy.ts` に、offset を持つ `A(B(C))` 相当の構造で root の `C` を nested `B` に入れる回帰テストを追加した。
+- 既存 `drag G1 in/out` は、React 18 以後の描画タイミングに合わせ、1回目の root drop 後に `G1` が root 位置へ描画されたことを待ってから次の drag を始めるようにした。
+
+確認結果:
+
+- `npm test -- --watchAll=false`: pass
+- `npm run build`: pass
+- `cypress/e2e/kozaneba/test_drag.cy.ts`: `8 tests` pass
+- Firebase emulator 付き `cypress/e2e/kozaneba/*.cy.ts`: `17 specs`, `31 tests` pass
+
 ## 今回の学び
 
 ### 「テストが通る」の主語を分ける
@@ -261,6 +330,56 @@ Auth / Firestore emulator を入れる方針は正しかったが、単に emula
 - DOM 座標は許容誤差付きで検証する
 - 絶対座標ではなく移動量・包含関係・順序を検証する
 - pixel exact が必要な spec だけ明示的に残す
+
+### 状態モデルをテストの主対象にする
+
+[キャンバス状態テスト戦略 2026-06](../sources/canvas-state-testing-strategy-2026-06.md) の中心は、「付箋がそこに見えているか」ではなく「付箋の world 座標が正しいか」を基本の正解にすること。
+
+Kozaneba では `INITIAL_GLOBAL_STATE` に `itemStore` / `drawOrder` / `scale` / `trans_x` / `trans_y` / `selected_items` / `selectionRange` / `annotations` があり、すでに Cypress から `cy.getGlobal()` / `cy.setGlobal()` / `cy.updateGlobal()` で触れる。したがって、既存の `window.movidea` は `window.__TEST_API__` に近い役割をすでに持っている。
+
+次に強化すべきなのは、見た目のピクセルではなく以下の state invariant である。
+
+- `screen_to_world` と `world_to_screen` が互いにほぼ逆写像になる
+- `zoom_around_pointer` 後も cursor 下の world point がずれない
+- pan / zoom 後も selection / hit test がずれない
+- 単体 drag 後は対象 item の world 座標だけが期待差分で変わる
+- 複数選択 drag 後は全 selected item が同じ world 座標差分で動く
+- nested group の出し入れ後も、子 item の表示位置と親子関係が矛盾しない
+- `drawOrder` / annotation の重なり順や click 対象が state と一致する
+
+これは現行 failure の扱いにも影響する。`test_drag.cy.ts` の nested drag failure は単に `[225, 225]` という DOM 座標期待値を直す問題ではなく、nested group 操作後の state invariant として書き直す候補である。
+
+### イベント列は interaction controller として見る
+
+ドラッグや選択は、全てをブラウザ E2E に寄せるのではなく、まず「pointerDown / pointerMove / pointerUp のイベント列から state がどう変わるか」として見るのが安定する。
+
+現行 Kozaneba は `fast_drag_manager.ts` が drag 中の DOM style を直接動かし、mouseup 時に ReactN state を確定する。これは体感速度のための実装だが、テストでは次を分けて見る必要がある。
+
+- drag 中の一時 DOM style は必要最小限だけ確認する
+- mouseup 後の正しさは `itemStore` / `selected_items` / 親子関係 / `selectionRange` で確認する
+- Cypress の direct `trigger()` と実ユーザー操作を混同しない
+- 必要なら canvas 起点の mouse sequence helper と、state reducer 相当の unit test に分ける
+
+この分担にすると、renderer の visual regression は「状態が明らかに描画されているか」を見る薄い層にできる。visual regression を使う場合も、空の場、数枚のこざね、選択中、複数選択中、zoom / pan 後、日本語テキスト、長文、重なり、程度の固定ケースに絞るのがよい。
+
+### Cypress / Playwright / Webwright の使い分け
+
+2026-06-02 の相談時点での判断は、**Kozaneba では Cypress から Playwright へ全面移行するより、まず state / world 座標の unit・integration test を厚くする**こと。
+
+Cypress は既存資産があるため短期の正解である。`cy.getGlobal()` / `cy.setGlobal()` / `cy.updateGlobal()` を使えば、DOM の見た目ではなく ReactN state を見られる。ただし Cypress の強みである retry-ability は DOM query / assertion の文脈で効くものであり、`trigger()` による direct DOM 操作や `getBoundingClientRect()` 完全一致に寄せると、Kozaneba の drag / pointer-events / pixel exact failure には弱い。
+
+Playwright は、新規に E2E を組むなら有力である。auto-waiting / auto-retrying assertion、test ごとの isolated browser context、parallel 実行が強く、実ブラウザ操作を少数の代表 scenario として CI に載せる用途に向く。特に IME、日本語入力、window resize、pointer 操作、複数 tab、保存復元のような「ブラウザ実装そのものを見たい」ケースでは Cypress より第一候補になりうる。
+
+Webwright は、CI の決定的 test runner ではなく、Playwright を下回りで使う AI browser agent framework として見るべきである。探索、再現手順生成、テスト案生成、AI Agent に「この UI を触って問題を探す」作業をさせる補助には向くが、Kozaneba の品質 gate に直接置くものではない。
+
+もし「Webwright」が WebdriverIO の意味なら、WebdriverIO は WebDriver / WebDriver BiDi / mobile / native / desktop まで広げたい場合の候補である。ただし Kozaneba は現時点では Web アプリの canvas / DOM interaction が中心なので、導入理由は Playwright より弱い。
+
+したがって推奨は次の順序。
+
+1. Jest などで `screen_to_world` / `world_to_screen` / `zoom_around_pointer` / nested group offset / selection / drag-drop state invariant を unit・integration test 化する。
+2. 既存 Cypress は捨てず、boot / Firebase emulator smoke / 代表 regression の薄い gate として整理する。
+3. Playwright は、Cypress 置換ではなく「本物のユーザー操作らしさ」が必要な少数 E2E から試験導入する。
+4. Webwright は、AI に探索・再現・テスト案生成をさせる補助道具として扱い、CI の合否判定には使わない。
 
 ### AI Agent に投げる前に gate を固定する
 
@@ -354,7 +473,16 @@ Plan B の仮説検証を続けるには、まず次を明文化する必要が�
 - [netlify.toml](../../work/kozaneba/netlify.toml)
 - [firebase.json](../../work/kozaneba/firebase.json)
 - [cypress.config.ts](../../work/kozaneba/cypress.config.ts)
+- [2026-06-02_キャンバス状態テスト戦略](../../raw/2026-06-02_キャンバス状態テスト戦略.md)
+- [キャンバス状態テスト戦略 2026-06](../sources/canvas-state-testing-strategy-2026-06.md)
+- [Cypress Retry-ability](https://docs.cypress.io/app/core-concepts/retry-ability)
+- [Playwright Auto-waiting](https://playwright.dev/docs/actionability)
+- [microsoft/Webwright](https://github.com/microsoft/Webwright)
+- [WebdriverIO](https://webdriver.io/docs/why-webdriverio/)
 - [cypress/support/e2e.ts](../../work/kozaneba/cypress/support/e2e.ts)
+- [src/dimension/world_to_screen.ts](../../work/kozaneba/src/dimension/world_to_screen.ts)
+- [src/Event/onWheel.tsx](../../work/kozaneba/src/Event/onWheel.tsx)
+- [src/Event/fast_drag_manager.ts](../../work/kozaneba/src/Event/fast_drag_manager.ts)
 - [src/Cloud/init_firebase.ts](../../work/kozaneba/src/Cloud/init_firebase.ts)
 - [src/Global/exposeGlobal.ts](../../work/kozaneba/src/Global/exposeGlobal.ts)
 - [src/Dialog/AddKozaneDialog/AddKozaneDialog.tsx](../../work/kozaneba/src/Dialog/AddKozaneDialog/AddKozaneDialog.tsx)
