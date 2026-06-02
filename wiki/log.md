@@ -614,3 +614,16 @@ updated: 2026-05-25
 - [entities/Sentry.md](entities/Sentry.md) を新規作成し、2021-08 の導入経緯、現行実装、ユーザ試行錯誤エラーを Sentry に送るべきでないという注意点を整理。
 - [themes/運用エラー観察.md](themes/運用エラー観察.md) を新規作成し、Sentry issue を本体バグ、入力 validation、UserScript / 拡張、外部サービス、ブラウザ依存、開発ノイズに分類して読む手順を定義。
 - [themes/テスト改善計画.md](themes/テスト改善計画.md) と [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) に、Sentry を production 実害ベースの観測ソースとして接続した。
+
+## [2026-06-03] query | CI安定化とVite移行の実施記録
+
+- [themes/CI安定化とVite移行_2026-06.md](themes/CI安定化とVite移行_2026-06.md) を新規作成し、PR #40〜#44 による座標ロジック単体テスト、required CI、Node 24、CRA から Vite への移行、Vite 環境 API 後処理を記録。
+- 学びとして、CI gate を先に安定させると移行 failure を切り分けやすいこと、Firebase emulator は GitHub CI で Java 21 固定により動くこと、required CI と観測 CI は分けるべきことを整理。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) に、3段階計画が完了済みであることと、今後は #17 を小さな regression に分解する方針を追記。
+- [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) に、#13 CI/CD パイプライン構築は完了候補になったことを追記。次の実装候補は #13 の完了処理後、#4 production console log cleanup。
+
+## [2026-06-03] query | direct eval warning は仕様変更にしない
+
+- nishio の判断として、Vite build で見えた direct `eval` warning は [concepts/UserScript.md](concepts/UserScript.md) の仕様変更として扱わないことを記録。
+- [themes/CI安定化とVite移行_2026-06.md](themes/CI安定化とVite移行_2026-06.md) の学びと次アクションを更新し、#13 完了処理、#4 production console log cleanup、direct `eval` warning の小さな後続作業という順序に整理。
+- [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) に、direct `eval` warning は既存の intentional な UserScript 実行を維持したまま明示・整理する後続作業だと追記。

@@ -13,6 +13,8 @@ sources:
   - work/kozaneba/scripts/codex-preflight.sh
   - wiki/themes/Plan_B試行_2026-06.md
   - wiki/themes/テスト改善計画.md
+  - wiki/themes/CI安定化とVite移行_2026-06.md
+  - wiki/concepts/UserScript.md
   - wiki/themes/運用エラー観察.md
 ---
 
@@ -33,6 +35,10 @@ sources:
 - [#25 コンポーネントレンダリングのプロファイリング実施](https://github.com/nishio/kozaneba/issues/25)
 
 残り 15 件は、古い前提、性能系の重複、または広すぎる一般論として理由コメント付きで close した。
+
+その後、2026-06-03 に PR #41〜#44 で CI workflow、required checks、Node 24、Vite 移行まで完了したため、#13 は実質的に完了候補になった。Issue 側には、[CI安定化とVite移行 2026-06](CI安定化とVite移行_2026-06.md) と PR #41〜#44 を根拠として完了コメントを残して閉じるのが次の housekeeping になる。
+
+次に実装するなら #4 production console log cleanup を先に進める。Vite build で見えた direct `eval` warning は、[UserScript](../concepts/UserScript.md) の仕様変更ではなく、既存の intentional なコード実行をどう明示するかという小さな後続作業として扱う。
 
 ## 得られた知見
 
@@ -141,4 +147,6 @@ GitHub Issues は実行キュー、wiki は判断理由の保存場所である�
 - [codex-preflight.sh](../../work/kozaneba/scripts/codex-preflight.sh)
 - [Plan B 試行 2026-06](Plan_B試行_2026-06.md)
 - [テスト改善計画](テスト改善計画.md)
+- [CI安定化とVite移行 2026-06](CI安定化とVite移行_2026-06.md)
+- [UserScript](../concepts/UserScript.md)
 - [運用エラー観察](運用エラー観察.md)

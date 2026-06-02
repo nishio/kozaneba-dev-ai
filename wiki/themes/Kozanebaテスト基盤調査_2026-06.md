@@ -2,8 +2,9 @@
 title: Kozaneba テスト基盤調査 2026-06
 type: theme
 created: 2026-06-02
-updated: 2026-06-02
+updated: 2026-06-03
 sources:
+  - wiki/themes/CI安定化とVite移行_2026-06.md
   - raw/2026-06-02_キャンバス状態テスト戦略.md
   - wiki/sources/canvas-state-testing-strategy-2026-06.md
   - https://docs.cypress.io/app/core-concepts/retry-ability
@@ -39,6 +40,12 @@ sources:
 ---
 
 # Kozaneba テスト基盤調査 2026-06
+
+## 2026-06-03 更新
+
+このページの前半にある「CI がアプリテストを実行していない」「Netlify は build のみで test しない」「CRA 移行が必要」という記述は、2026-06-02 調査時点の状態である。
+
+その後、PR #40〜#44 で、座標ロジック単体テスト、Kozaneba required CI、Node 24、Vite 移行、Vite 環境 API の後処理まで完了した。現在の実施記録と学びは [CI安定化とVite移行 2026-06](CI安定化とVite移行_2026-06.md) に保存した。
 
 ## 要約
 
