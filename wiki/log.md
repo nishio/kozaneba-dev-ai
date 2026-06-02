@@ -379,3 +379,19 @@ updated: 2026-05-25
 - 修正:
   - `#tinysample` のサンプル変更は本質から外れるので `work/kozaneba` では revert
   - Plan B ページの検証結果を「Cypress 未実行」から「Cypress pass」に更新
+
+## [2026-06-02] implement | #blank 白画面 boot 経路の修正
+
+- nishio の再指摘を受け、`#blank` 完全白画面を「空の場」ではなく UI boot 失敗として扱い直した。
+- 原因候補として、初期 HTML の gstatic Firebase UI CSS 同期 stylesheet が React bundle 実行前の白画面を作りうることを特定。
+- `work/kozaneba` で追加修正:
+  - `public/index.html` から Firebase UI CSS の外部 stylesheet を削除
+  - JS 起動前も完全白画面にならない Kozaneba boot fallback を `#root` に追加
+  - Firebase UI CSS は `SignDialog` / `CloudSaveDialog` を開いた時だけ動的ロード
+  - `authui.start(...)` を render 中実行から `useEffect` に移動
+- 検証:
+  - `env -u ELECTRON_RUN_AS_NODE npx cypress run --spec cypress/e2e/kozaneba/test_line_label.cy.ts --config video=false`: 4 tests pass
+  - `npm test -- --watchAll=false`: pass
+  - `npm run build`: pass
+  - `www.gstatic.com` 遮断の headless Chrome screenshot でも `#blank` の AppBar / StatusBar が表示されることを確認
+- `work/kozaneba` commit: `7d36437 Prevent blank boot from external auth CSS`
