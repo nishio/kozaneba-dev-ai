@@ -438,3 +438,15 @@ updated: 2026-05-25
 - 内容: GitHub Actions がアプリテストを走らせていない事実、Netlify が build のみで test しないこと、`origin/main` の Cypress 既存ベースライン失敗、失敗分類(Firebase emulator / AddKozaneDialog / pointer-events / pixel exact / legacy movidea)。
 - Firebase emulator について、`firebase.json` には Auth 9099 / Firestore 8080 / Functions 5001 の設定があるが、調査時点では CLI と emulator 起動がないことを明記。
 - 含意: Plan B の次工程は新機能追加ではなく、CI 必須 subset、emulator 付き integration test、legacy spec quarantine、UI test helper 整備を先に固める。
+
+## [2026-06-02] implement | Firebase emulator smoke の追加
+
+- `work/kozaneba` に `firebase-tools@12.9.1` を追加。最新 15 系は Node 20+ 要求なので、Netlify の Node 16 設定と衝突しにくい 12 系を選択。
+- `scripts/cypress-emulator-smoke.sh` と `npm run cypress:emulator-smoke` を追加し、dev server 起動確認 + Auth/Firestore emulator + Cypress smoke を一括実行できるようにした。
+- Cypress の Firebase import を `firebase/compat/app` / `firebase/compat/auth` に揃え、`toUseEmulator()` を Firestore だけでなく Auth emulator も接続する入口に変更。
+- `AddKozaneDialog` の textarea を native textarea にし、小さい viewport でも DialogActions に覆われない高さ制約を追加。
+- 検証:
+  - `npm run cypress:emulator-smoke`: pass (`movidea/login`, `movidea/save`, `kozaneba/test_tutorial`)
+  - `npm run codex:preflight`: pass
+  - 全 Cypress with emulator: `40 specs 中 16 specs failed`, `55 tests 中 17 tests failed`
+- 含意: Firebase emulator 不在で落ちていた auth/save/tutorial 系は CI smoke に載せられる状態になった。残りは主に legacy movidea の座標/pointer-events/メニュー操作前提。

@@ -166,6 +166,42 @@ Firebase emulator を入れて auth/save/tutorial 系をテストする方針は
 
 2026-06-02 の作業中断直前に、`work/kozaneba` で `npm install --save-dev firebase-tools@12.9.1 --legacy-peer-deps` まで実行済み。ただし、これはまだ方針確定前の変更なので commit していない。
 
+## 2026-06-02 の emulator 導入テスト結果
+
+その後、`firebase-tools@12.9.1` を使って Auth / Firestore emulator を起動し、Cypress を実行した。
+
+最初の `movidea/login.cy.ts` は emulator 自体は起動したが、Cypress spec 側が `firebase/app` + `firebase/auth` を使っており、アプリ本体の `firebase/compat/*` とずれていたため `firebase.auth` が undefined で失敗した。
+
+compat import に揃えた後、`login` は Auth emulator 経由で pass。さらに `AddKozaneDialog` の textarea が small viewport で DialogActions に覆われる問題を修正した結果、`save` も Auth / Firestore emulator 下で pass した。
+
+追加した smoke script:
+
+```sh
+npm run cypress:emulator-smoke
+```
+
+対象:
+
+- `cypress/e2e/movidea/login.cy.ts`
+- `cypress/e2e/movidea/save.cy.ts`
+- `cypress/e2e/kozaneba/test_tutorial.cy.ts`
+
+結果:
+
+- `npm run cypress:emulator-smoke`: pass
+- `npm run codex:preflight`: pass
+- 全 Cypress with emulator: `40 specs 中 16 specs failed`, `55 tests 中 17 tests failed`
+
+以前の全 Cypress は `40 specs 中 20 specs failed`, `55 tests 中 21 tests failed` だったので、Firebase emulator と AddKozaneDialog 修正で 4 spec / 4 test 分の失敗を剥がせた。
+
+まだ残っている主な失敗は次の系統。
+
+- `kozaneba/test_drag.cy.ts` の nested drag 座標期待値
+- `movidea/` の legacy 座標期待値
+- `pointer-events: none` 中の Cypress direct trigger
+- `selection-view` / MUI menu の旧操作前提
+- `visit_reset` の old API expectation
+
 ## 推奨する進め方
 
 ### 1. 必須 smoke test を CI に載せる
