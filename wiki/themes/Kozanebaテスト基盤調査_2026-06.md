@@ -24,6 +24,11 @@ sources:
   - work/kozaneba/src/Event/drag_drop_item.ts
   - work/kozaneba/src/Event/drag_drop_item_into_group.ts
   - work/kozaneba/src/Event/get_total_offset_of_parents.ts
+  - work/kozaneba/functions/src/index.ts
+  - work/kozaneba/src/Scrapbox/add_scrapbox_links.ts
+  - work/kozaneba/src/Group/calc_closed_style.tsx
+  - work/kozaneba/package-lock.json
+  - work/kozaneba/yarn.lock
   - work/kozaneba-drag-investigation/src/Event/drag_drop_item_into_group.ts
   - work/kozaneba-drag-investigation/src/Event/get_total_offset_of_parents.ts
   - work/kozaneba-drag-investigation/cypress/e2e/kozaneba/test_drag.cy.ts
@@ -91,6 +96,28 @@ env -u ELECTRON_RUN_AS_NODE npx cypress run ...
 ```
 
 この知見は `codex:preflight` に反映済み。
+
+## Security alert 修正と CRA 移行の必要性
+
+2026-06-02 に GitHub security alert 対応として、Code scanning と Dependabot の両方を確認した。
+
+Code scanning 側は、以下の実装修正で open alert 0 件になった。
+
+- `functions/src/index.ts`: `get_scrapbox_page` は任意 URL fetch ではなく、`https://scrapbox.io` の URL だけを受け付け、固定 origin の Scrapbox API URL に変換する。旧 `proxy` は任意 URL fetch を停止し `410` を返す。
+- `src/Scrapbox/add_scrapbox_links.ts`: `startsWith("https://scrapbox.io")` ではなく `URL` parse 後に `protocol` と `hostname` を検証する。
+- `src/Group/calc_closed_style.tsx`: `.replace("\n", " ")` を `.replace(/\n/g, " ")` にし、複数改行をすべて処理する。
+
+Dependabot 側は大量の alert を依存更新と lockfile 更新で削減したが、最終的に 6 件だけ残った。残りはすべて `react-scripts > webpack-dev-server` 由来の medium alert で、`package-lock.json` に 3 件、`yarn.lock` に 3 件である。
+
+根本原因は、現行 Kozaneba が Create React App / `react-scripts@5.0.1` に依存していること。`webpack-dev-server` の alert を消すには advisory 範囲外の `webpack-dev-server@5.2.4` へ上げる必要があるが、単純に npm `overrides` / Yarn `resolutions` で強制すると `npm start` が壊れる。実際に試すと CRA 側が渡す `onAfterSetupMiddleware` / `onBeforeSetupMiddleware` が webpack-dev-server 5 の schema で拒否され、dev server 起動時に `Invalid options object` で停止した。
+
+したがって、この 6 件を安全に消すには「推移依存を上書きする」だけでは足りない。選択肢は次のどれかになる。
+
+- CRA / `react-scripts` から Vite などへ移行する。
+- `react-scripts` を eject / fork / patch して webpack-dev-server 5 の `setupMiddlewares` 形式に対応する。
+- 短期的には、production build ではなく dev server 由来の medium alert として扱い、dev server を外部公開しない運用でリスクを限定する。
+
+これは「今すぐ Kozaneba の本番挙動を壊している問題」ではないが、Dependabot を完全に緑にするには避けて通れない開発基盤負債である。今後 CI を整備する時にも、CRA に留まるか、Vite 等へ移行するかを明示的に判断する必要がある。
 
 ## 失敗の分類
 
@@ -270,6 +297,23 @@ nishio の実 UI 確認では、`A(B(C))` というネスト group を作り、`
 - `npm run build`: pass
 - `cypress/e2e/kozaneba/test_drag.cy.ts`: `8 tests` pass
 - Firebase emulator 付き `cypress/e2e/kozaneba/*.cy.ts`: `17 specs`, `31 tests` pass
+
+その後、PR [nishio/kozaneba#39](https://github.com/nishio/kozaneba/pull/39) は merge され、deploy 環境でも nishio が実 UI で動作確認した。つまり今回の `A(B(C))` 系 nested drag の不自然な位置ずれは、コード上の親 chain offset 修正で実際に直せたと判断できる。
+
+### 今回うまくいったアプローチ
+
+この修正では、最初から既存 `test_drag.cy.ts` の pixel exact failure だけを信じて修正しなかったことが効いた。
+
+有効だった流れ:
+
+- dirty な `work/kozaneba` から離れ、clean worktree で再現・修正・検証した。
+- `A(B(C))` を人間が実 UI で触って観察し、「root に出すと自然だが nested sibling に戻すと不自然」という具体的な操作差分に落とした。
+- 既存の `drag G1 in/out` failure を、React 18 後の描画タイミング問題と、実際の nested offset バグに分解した。
+- root → nested group の座標変換を、DOM 座標だけでなく parent chain / state の観点から読み直した。
+- 修正後に `test_drag` 単体だけでなく、Firebase emulator 付きの Kozaneba 系 Cypress 全体を回した。
+- 最後に deploy 環境で人間が実 UI を確認した。
+
+特に重要なのは、「Cypress が落ちているから実装が壊れている」とも「古い spec だから無視でよい」とも決めつけず、人間観察で操作の意味を補い、state / parent chain の不変条件へ変換した点である。キャンバス UI の regression では、pixel exact assertion は症状の検出器として使い、原因特定と恒久テストは world/state 側に寄せるのがよい。
 
 ## 今回の学び
 
@@ -486,3 +530,8 @@ Plan B の仮説検証を続けるには、まず次を明文化する必要が�
 - [src/Cloud/init_firebase.ts](../../work/kozaneba/src/Cloud/init_firebase.ts)
 - [src/Global/exposeGlobal.ts](../../work/kozaneba/src/Global/exposeGlobal.ts)
 - [src/Dialog/AddKozaneDialog/AddKozaneDialog.tsx](../../work/kozaneba/src/Dialog/AddKozaneDialog/AddKozaneDialog.tsx)
+- [functions/src/index.ts](../../work/kozaneba/functions/src/index.ts)
+- [src/Scrapbox/add_scrapbox_links.ts](../../work/kozaneba/src/Scrapbox/add_scrapbox_links.ts)
+- [src/Group/calc_closed_style.tsx](../../work/kozaneba/src/Group/calc_closed_style.tsx)
+- [package-lock.json](../../work/kozaneba/package-lock.json)
+- [yarn.lock](../../work/kozaneba/yarn.lock)

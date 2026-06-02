@@ -114,6 +114,7 @@ updated: 2026-06-02
 - [畳むUIの再設計](themes/畳むUIの再設計.md) — Pad++/Bret Victor/Heptabase/Magic Lens/AI 自動表札による「囲んで畳む」の刷新案
 - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験
 - [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、状態モデル中心のキャンバステスト戦略、UI テスト helper 整備方針の整理
+- [テスト改善計画](themes/テスト改善計画.md) — nested drag の知見を座標ロジック単体テストへ入れ、Kozaneba 本体 required CI を安定させてから Node / CRA 脱出へ進む3段階計画
 
 ## Sources(個別ソースの要約)
 

@@ -523,3 +523,80 @@ updated: 2026-05-25
 - `test_drag.cy.ts` に offset 付き `A(B(C))` 相当の regression を追加し、既存 `drag G1 in/out` は React 18 の描画安定後に次 drag を始めるよう調整。
 - 検証: `npm test -- --watchAll=false` pass、`npm run build` pass、`test_drag.cy.ts` は 8 tests pass、Firebase emulator 付き `cypress/e2e/kozaneba/*.cy.ts` は 17 specs / 31 tests pass。
 - commit `5b19a29` を `fix/nested-drag-offset` として push し、draft PR [nishio/kozaneba#39](https://github.com/nishio/kozaneba/pull/39) を作成。
+
+## [2026-06-02] query | react-scripts 由来の Dependabot 残課題を Wiki に書いたか
+
+- まだ記録していなかったため、[themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に「Security alert 修正と CRA 移行の必要性」節を追記。
+- Code scanning は `get_scrapbox_page` の固定 origin 化、旧 proxy 停止、Scrapbox URL 判定強化、複数改行 sanitize 修正により open alert 0 件になったと整理。
+- Dependabot は `react-scripts > webpack-dev-server` 由来の medium 6 件だけが残り、`webpack-dev-server@5.2.4` の単純 override は CRA の dev server 設定と互換性がなく `npm start` を壊すため不採用だと記録。
+- 完全解消には CRA / `react-scripts` からの移行、または `react-scripts` の eject / fork / patch が必要で、短期的には dev server を外部公開しない運用でリスクを限定する開発基盤負債として扱う、と明文化。
+
+## [2026-06-02] query | テスト改善計画のページを執筆
+
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) を新規作成。
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) の調査結果を、Phase 0〜6 の実行計画として再構成。
+- 方針は、全 Cypress 緑化や Playwright 全面移行ではなく、state / world 座標の unit・integration test を厚くし、Cypress は薄い smoke / regression gate に整理すること。
+- P0/P1/P2 優先順位、成功条件、今やらないこと、CI 化、Playwright 少数導入、visual regression の限定利用を明記。
+
+## [2026-06-02] query | CI ではなるべく多くのテストを動かすべき
+
+- nishio の指摘: 「全 Cypress はまだ必須 gate ではない」が、CI で動かさないように読める。なるべく多くのものを CI で動かすべきではないか。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) を修正し、CI で実行する範囲と merge を止める required gate を分離。
+- Required CI / Non-required CI / Scheduled CI / Quarantine CI の層を追加。
+- 方針: full / legacy / quarantine test も CI 上で観測し、artifact と失敗件数を残す。ただし既知 failure は最初から required check にしない。
+
+## [2026-06-02] query | Movidea 以外のテストは全部通るのでは
+
+- nishio の指摘: nested drag 修正後は Movidea 以外の Kozaneba Cypress は全部通るようになったのではないか。
+- `work/kozaneba` の main は `8d14d5b` で、nested drag 修正 `5b19a29` はまだ `fix/nested-drag-offset` / `work/kozaneba-drag-investigation` 側。
+- `work/kozaneba-drag-investigation` で `cypress/e2e/kozaneba/*.cy.ts` を Firebase emulator 付きで再実行し、`17 specs / 31 tests` 全 pass を確認。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) を修正し、`fix/nested-drag-offset` が main に入った後は `cypress:kozaneba-all` を required CI に載せる方針へ変更。
+
+## [2026-06-02] query | PR #39 merge 状態の再確認
+
+- nishio の指摘どおり、`origin/main` は `c46b5fc` で PR #39 merge 済み。`5b19a29` は `origin/main` に含まれている。
+- `work/kozaneba` も `main@c46b5fc` になっていることを確認。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) の条件付き表現を修正し、PR #39 merge 後の `origin/main` / `work/kozaneba` では Kozaneba Cypress 17 specs / 31 tests が通る、という現状に更新。
+
+## [2026-06-02] query | Node 更新と CRA 脱出はテスト改善後
+
+- nishio の方針: Node が古い問題と CRA をやめたい問題は、テストがいい感じになった後で移行したい。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) に Phase 7「Node 更新と CRA 脱出はテスト gate 安定後に行う」を追加。
+- 移行開始条件として、Required CI 安定、`cypress:kozaneba-all` required 化、full / legacy / quarantine の CI 観測、主要座標ロジックの unit / integration test 化、移行前 artifact 保存を明記。
+- P2 から CRA / Vite 移行を外し、P3 として Node version 更新、CRA / Vite migration spike、Dependabot 残 alert 解消に移した。
+
+## [2026-06-02] query | テスト改善計画への追加指摘
+
+- nishio の指摘:
+  - Movidea legacy はそもそも通るべきテストなのか分からない。
+  - full Cypress に何が残っているのか不明。
+  - 座標ロジック単体テスト化には nested drag 修正の知見を入れるべき。
+  - Cypress helper 整理はよいが、順番は先すぎるかもしれない。
+  - Playwright は必要性がないなら入れず、Cypress だけでよいなら複雑にしない方がよい。
+- `work/kozaneba` current main には Kozaneba 17 specs と Movidea 23 specs がある。Kozaneba 17 specs / 31 tests は pass 済み。
+- Movidea 23 specs を emulator なしで実測し、17 specs failed / 7 tests pass / 18 tests failed。主な失敗は旧 DOM/class/text 前提、pixel exact 座標期待、Cypress actionability、Firebase emulator なし、旧 API 前提。
+- `firebase-tools@15` は Java 21 未満を拒否するため、emulator 付き full run には CI runner の Java 21 固定が必要。Cypress 13.17.0 も binary cache / install が必要。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) を修正:
+  - Movidea は「通すべきか分類する対象」とし、一括で直す対象から外した。
+  - nested drag 修正の知見(`find_parent(current_parent, g)`、parent chain offset、`A(B(C))`)を Phase 2 に明記。
+  - Cypress helper 整理は、残す spec を分類した後に行う順序へ変更。
+  - Playwright は concrete gap が出るまで入れない方針へ変更。
+
+## [2026-06-02] query | nested drag 修正アプローチの file back
+
+- nishio から、PR #39 merge 後に deploy 環境で実 UI 動作確認し、今回のアプローチでうまく直せたと共有された。
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に、PR #39 merge / deploy 確認済みの結果を追記。
+- 同ページに「今回うまくいったアプローチ」として、clean worktree、実 UI の人間観察、Cypress failure の分解、parent chain / state 不変条件への変換、Kozaneba 系 Cypress 全体確認、deploy 確認の流れを整理。
+- 学び: キャンバス UI の regression では、pixel exact assertion を症状検出器として使い、原因特定と恒久テストは world/state 側に寄せる。
+
+## [2026-06-02] query | nested drag ソースコード読解の知見
+
+- nested drag 修正時に読んだソースから、Kozaneba の位置は root 座標と親グループ相対座標が混在し、絶対位置は親グループ鎖の offset 合計で決まることを整理。
+- drag/drop は canvas drop と group drop で別ルートになり、root↔nested / nested↔nested の座標変換と `normalize_group_position` がバグりやすい中心であると確認。
+- Cypress の `do_drag` は直接 DOM event を発火するため、人間操作とは異なる render timing / stale DOM の false negative があり、React 18 以降は明示的な待機や状態確認が必要だと整理。
+
+## [2026-06-02] query | テスト改善計画の順序を3段階に整理
+
+- nishio の整理: 1 座標ロジック単体テストに今回の知見を入れる、2 Kozaneba 本体側を required CI にする、3 CI gate 安定後に Node / CRA 脱出。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) をこの3段階に再構成。
+- Movidea legacy は通すべきか棚卸し対象、Playwright は concrete gap が出るまで入れない、Cypress helper 整理は残す spec を決めた後に変更。
