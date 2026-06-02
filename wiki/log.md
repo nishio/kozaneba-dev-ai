@@ -114,9 +114,9 @@ updated: 2026-05-25
 - [wiki/index.md](index.md) の themes セクションに 2 本を追加。
 - 残る論点(未着手): 関係中心の Kozaneba は「Kozaneba の自然な進化」か「別物への分岐」か、KJ法 / こざね法 との接続をどう保つか、Scrapbox との棲み分け。
 
-## [2026-05-16] ingest | raw/a.txt — 関係性UI設計 GPT 4ラウンド対話
+## [2026-05-16] ingest | raw/関係UI議論_GPT.md — 関係性UI設計 GPT 4ラウンド対話
 
-- [raw/a.txt](../raw/a.txt) を読み込み。nishio と GPT の4ラウンドの対話で、関係性操作 UI を巡って Shneiderman / Yi-Kang-Stasko / Heer-Shneiderman / Nielsen / W3C link types / 空間ハイパーテキスト / ETable / brushing-linking / Nissenbaum / IBIS-gIBIS / Open Hypermedia / Wikidata / RDF 1.2 / Unfolding Edges / GraphRAG / Gendlin / クリーンランゲージ / Focusing を縦横に引きながら議論。
+- [raw/関係UI議論_GPT.md](../raw/関係UI議論_GPT.md) を読み込み。nishio と GPT の4ラウンドの対話で、関係性操作 UI を巡って Shneiderman / Yi-Kang-Stasko / Heer-Shneiderman / Nielsen / W3C link types / 空間ハイパーテキスト / ETable / brushing-linking / Nissenbaum / IBIS-gIBIS / Open Hypermedia / Wikidata / RDF 1.2 / Unfolding Edges / GraphRAG / Gendlin / クリーンランゲージ / Focusing を縦横に引きながら議論。
 - nishio の問題提起ライン:
   - Round 2: 「リンクに意味がないから毛玉、リンクに意味記述するのが負担はノード偏重では? ノードのコンテンツの多くは本来エッジに置かれるべきでは?」
   - Round 3: 「リンクは1対1を仮定するが N項かも、Gendlin の関係と側面の議論と照らせ」
@@ -313,3 +313,15 @@ updated: 2026-05-25
   - データモデル刷新ページが「Loro を採用するとどうやって動かすのか」まで答える状態になった
   - Plan B 第一歩(Firestore 残しで Loro 化)の実装規模が見える(provider 数百行)
   - Loro エコシステム未成熟というリスクを明示することで、Yjs を選ぶ判断材料も同時に提供
+
+## [2026-06-02] lint | raw/a.txt → raw/関係UI議論_GPT.md にリネーム + CLAUDE.md に raw/ 命名規約追加
+
+- nishio の指摘:プレースホルダ名 `raw/a.txt` のまま運用していたが、CLAUDE.md に raw/ ファイル命名規約が書かれていなかった。重要ソース(13 wiki ページ × 46 箇所から参照、関係場 / 関係を第一級にする / Clean Relation Elicitation の起源)であるほどファイル名から内容を読み取れるべき。
+- 対応:
+  - `git mv raw/a.txt raw/関係UI議論_GPT.md`
+  - wiki/ 内の `raw/a.txt` を `raw/関係UI議論_GPT.md` に sed 一括置換(13 ファイル、リンク URL・bullet・display text すべて含む)
+  - [CLAUDE.md](../CLAUDE.md) の「命名規約」セクションに raw/ 規約を追加:プレースホルダ名禁止、推奨形式 `raw/<内容>.md` または `raw/<YYYY-MM>_<内容>.md`、複数ラウンド対話なら代表テーマで命名、**ingest 工程の最初に命名する**(後でリネームすると参照更新コストが累積)、scrapbox_kozaneba/ などサブディレクトリは独自規約に従う
+- 効果:
+  - raw/ 直下の 2 ファイルが両方とも内容を表す名前に(`init.txt` / `関係UI議論_GPT.md`)
+  - 今後の ingest で同じプレースホルダ運用が起きないようガードレール追加
+  - 公開リポジトリで raw/ を眺めた人にも内容が伝わる

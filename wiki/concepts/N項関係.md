@@ -5,7 +5,7 @@ created: 2026-05-16
 updated: 2026-06-02
 sources:
   - raw/scrapbox_kozaneba/2021-08-10__pKozaneba.md
-  - raw/a.txt
+  - raw/関係UI議論_GPT.md
   - work/kozaneba/src/Global/TAnnotation.ts
 ---
 
@@ -49,7 +49,7 @@ label: String.optional()
 
 ## 「N項関係でもまだ足りない」(2026-05)
 
-[raw/a.txt](../../raw/a.txt) の Round 3 で、[Gendlin](../entities/Gendlin.md) の関係論と照合した結果、N項関係は二項関係よりリッチだが **まだ「項が先にあって関係がそれらを結ぶ」という形式主義を残している** と指摘された:
+[raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) の Round 3 で、[Gendlin](../entities/Gendlin.md) の関係論と照合した結果、N項関係は二項関係よりリッチだが **まだ「項が先にあって関係がそれらを結ぶ」という形式主義を残している** と指摘された:
 
 > R(A, B, C, D) という形式は、A, B, C, D が先にあり、それらの間に R がある、という見方を残している。
 
@@ -89,4 +89,4 @@ Kozaneba の `items: TItemId[]` モデルは **bipartite 表現と直接対応**
 ## Sources
 
 - [pKozaneba](../../raw/scrapbox_kozaneba/2021-08-10__pKozaneba.md) — `[辺ラベルは三項関係]` の言及
-- [raw/a.txt](../../raw/a.txt) — N項関係 vs 関係場の議論
+- [raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) — N項関係 vs 関係場の議論

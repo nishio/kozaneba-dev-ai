@@ -4,14 +4,14 @@ type: theme
 created: 2026-05-16
 updated: 2026-05-16
 sources:
-  - raw/a.txt
+  - raw/関係UI議論_GPT.md
 ---
 
 ## このテーマの問い
 
 [関係を第一級にする](関係を第一級にする.md) で「関係オブジェクトをリッチにすべき」と言っても、ユーザに「N項関係を作って」「relation_type を選んで」と命令させると、思考の初期段階(まだ何が項で何が関係か未確定の段階)で硬い構造を強制してしまう。
 
-別の方向として、2026-05 の [raw/a.txt](../../raw/a.txt) Round 4 で nishio が提案したのが:
+別の方向として、2026-05 の [raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) Round 4 で nishio が提案したのが:
 
 > 人間が「操作」を自然言語で伝えるのではなく質問への回答とかボタンの操作で少しずつ表出する
 
@@ -56,7 +56,7 @@ sources:
 
 ## 中心UI構成: 4パネル
 
-[raw/a.txt](../../raw/a.txt) で提案された構成:
+[raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) で提案された構成:
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -103,7 +103,7 @@ Relation Field Candidate R1
 
 ## 操作体系: 5種類
 
-[raw/a.txt](../../raw/a.txt) で提示された関係に関する基本操作:
+[raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) で提示された関係に関する基本操作:
 
 1. **Lift**: 原文から側面を持ち上げる
 2. **Gather**: 複数対象を関係場に集める(まだ relation type は決めない)
@@ -236,4 +236,4 @@ Keichobot は「Situation Pad に書ける材料」を作り、Kozaneba は「�
 
 ## Sources
 
-- [raw/a.txt](../../raw/a.txt) — 2026-05 の GPT との4ラウンドの対話、特に Round 4(クリーンランゲージとの照合)
+- [raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) — 2026-05 の GPT との4ラウンドの対話、特に Round 4(クリーンランゲージとの照合)

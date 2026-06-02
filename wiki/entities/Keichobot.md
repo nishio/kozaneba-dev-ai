@@ -10,7 +10,7 @@ sources:
   - raw/scrapbox_kozaneba/2022-08-23__Kozaneba2022-08-19.md
   - raw/scrapbox_kozaneba/2023-03-04__KozanebaとKeichobotの関係は？.md
   - raw/scrapbox_kozaneba/2025-11-14__いどばた_Keichobot→概念マップ→Kozaneba_Miro.md
-  - raw/a.txt
+  - raw/関係UI議論_GPT.md
 ---
 
 ## 定義
@@ -39,7 +39,7 @@ sources:
 
 - 2022-08-19 [Kozaneba2022-08-19](../../raw/scrapbox_kozaneba/2022-08-23__Kozaneba2022-08-19.md): Keichobot の質問キーワードと回答キーワードのペアをエッジで結ぶことで「Aって何？」「B」「Bって何？」「C」というダメな会話パターンを検知し、アドバイスを出す方向の着想。「探検ネット → Kozaneba」と「探検ネット → Keichobot」がつながり、長年の課題だった「KeichobotとKozanebaの融合」の糸口が見えた、と nishio。
 - 2025-10/11 [いどばた/Keichobot→概念マップ→Kozaneba/Miro](../../raw/scrapbox_kozaneba/2025-11-14__いどばた_Keichobot→概念マップ→Kozaneba_Miro.md): LLM 以前から Keichobot がやっていた「言語化されていないものを引き出す」が、いどばた(LLM ベースのチャットシステム)で動くようになり、概念マップを介して Kozaneba(または Miro)に接続するパイプラインが構想されている。Kozaneba 側に [辺ラベル](../concepts/辺ラベル.md) 機能が不足。
-- 2026-05 [raw/a.txt](../../raw/a.txt) Round 4: クリーンランゲージを **関係性 UI** に応用する方向が提示された。Keichobot は単独の「対話ボット」ではなく、「[関係場](../concepts/関係場.md) を漸進的に外化する UI([Clean Relation Elicitation](../themes/Clean_Relation_Elicitation.md))」の上流コンポーネントとして位置付けられる。従来の「言語化 vs 一次元化」の分業は、より連続的な「未分節な状況 → 側面持ち上げ → 関係場 → 射影」のパイプラインの中で再定義される。
+- 2026-05 [raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) Round 4: クリーンランゲージを **関係性 UI** に応用する方向が提示された。Keichobot は単独の「対話ボット」ではなく、「[関係場](../concepts/関係場.md) を漸進的に外化する UI([Clean Relation Elicitation](../themes/Clean_Relation_Elicitation.md))」の上流コンポーネントとして位置付けられる。従来の「言語化 vs 一次元化」の分業は、より連続的な「未分節な状況 → 側面持ち上げ → 関係場 → 射影」のパイプラインの中で再定義される。
 
 ## Sources
 
@@ -49,4 +49,4 @@ sources:
 - [Kozaneba2022-08-19](../../raw/scrapbox_kozaneba/2022-08-23__Kozaneba2022-08-19.md)
 - [KozanebaとKeichobotの関係は？](../../raw/scrapbox_kozaneba/2023-03-04__KozanebaとKeichobotの関係は？.md)
 - [いどばた/Keichobot→概念マップ→Kozaneba/Miro](../../raw/scrapbox_kozaneba/2025-11-14__いどばた_Keichobot→概念マップ→Kozaneba_Miro.md)
-- [raw/a.txt](../../raw/a.txt) — クリーンランゲージを関係性 UI に応用する提案、Keichobot を関係場外化パイプラインの上流に位置付け
+- [raw/関係UI議論_GPT.md](../../raw/関係UI議論_GPT.md) — クリーンランゲージを関係性 UI に応用する提案、Keichobot を関係場外化パイプラインの上流に位置付け
