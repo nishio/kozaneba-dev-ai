@@ -450,3 +450,10 @@ updated: 2026-05-25
   - `npm run codex:preflight`: pass
   - 全 Cypress with emulator: `40 specs 中 16 specs failed`, `55 tests 中 17 tests failed`
 - 含意: Firebase emulator 不在で落ちていた auth/save/tutorial 系は CI smoke に載せられる状態になった。残りは主に legacy movidea の座標/pointer-events/メニュー操作前提。
+
+## [2026-06-02] query | テスト基盤調査からの学びの file back
+
+- [themes/Kozanebaテスト基盤調査_2026-06.md](themes/Kozanebaテスト基盤調査_2026-06.md) に「今回の学び」節を追記。
+- 学びとして、`テストが通る` の主語を gate ごとに分けること、CI がなければ main の Cypress failure は自然に蓄積すること、Firebase emulator 導入は compat import / early auth emulator connection も含むことを整理。
+- Cypress の actionability failure が実 UI の欠陥を示す場合があること、direct trigger と実ユーザー操作を混同しないこと、pixel exact assertion は最後の手段にすることを明文化。
+- 次の一手として、全 Cypress ではなく `codex:preflight` と `cypress:emulator-smoke` を GitHub Actions に載せる方針を記録。

@@ -202,6 +202,89 @@ npm run cypress:emulator-smoke
 - `selection-view` / MUI menu の旧操作前提
 - `visit_reset` の old API expectation
 
+## 今回の学び
+
+### 「テストが通る」の主語を分ける
+
+「テストが通る」と言うときは、必ずどの gate を指しているかを明示する必要がある。
+
+- `npm test -- --watchAll=false`
+- `npm run build`
+- `npm run codex:preflight`
+- `npm run cypress:emulator-smoke`
+- 全 Cypress
+
+今回、対象 spec と unit/build が通ったことを「全部通っている」と誤解しうる状態があった。これは実装品質以前にコミュニケーションの失敗である。今後は、通した gate と落ちている gate を同時に報告する。
+
+### CI がないと main は自然に壊れる
+
+`origin/main` の Cypress が大量に落ちていたのは不自然ではない。CI が Cypress を走らせていなければ、壊れた spec は merge を止めない。つまり「main がテストに落ちる」こと自体より、「落ちることを merge 時に検出していない」ことが根本問題だった。
+
+次にやるべきことは、全 Cypress をいきなり必須にすることではなく、現時点で通る smoke gate を CI に固定すること。
+
+### Firebase emulator 不在だけが原因ではない
+
+Auth / Firestore emulator を入れる方針は正しかったが、単に emulator を起動するだけでは不十分だった。
+
+実際には次の問題が順に露出した。
+
+- `firebase-tools` が未導入
+- Cypress spec の Firebase import がアプリ本体の compat import とずれていた
+- Auth emulator は最初の network call 前に接続しないと失敗する
+- 旧 spec は `NISHIO_TEST` のような現行 UI と合わない表示名を期待していた
+
+したがって、emulator 導入は「外部依存をローカル化する」だけではなく、「テストとアプリ本体の Firebase API 前提を揃える」作業でもある。
+
+### UI テストの失敗はテストだけの問題とは限らない
+
+`AddKozaneDialog` の textarea は Cypress が入力できないだけでなく、小さい viewport で実 UI としても DialogActions に覆われうる構造だった。Cypress の actionability failure は、実装側のレイアウト欠陥を示すことがある。
+
+今回の修正では、MUI `TextareaAutosize` の clone/高さ計算に依存せず native textarea + viewport 相対の高さ制約にした。これはテストを通すためだけでなく、実 UI の安定性にも寄与する。
+
+### Cypress の direct trigger は実ユーザー操作ではない
+
+`pointer-events: none` 中の DOM に `cy.trigger()` する失敗は、アプリのドラッグ実装と Cypress の direct DOM 操作が噛み合っていないことを示す。
+
+この種の spec は、安易に `{ force: true }` を足す前に目的を分ける必要がある。
+
+- 実ユーザー操作の再現をしたいなら、canvas 起点の mouse sequence helper に寄せる。
+- 内部状態遷移だけを検証したいなら、DOM actionability を避けて global state / API を見る。
+- 歴史的 regression を保持したいだけなら、legacy quarantine に入れる。
+
+### pixel exact assertion は最後の手段にする
+
+`getBoundingClientRect().x/y` の完全一致は、UI regression を検出できる一方で、font / browser / React / MUI / styled-components の差分に弱い。現行の全 Cypress 失敗の多くはこの系統だった。
+
+今後は、座標検証を次に分ける。
+
+- world coordinate の内部状態を検証する
+- DOM 座標は許容誤差付きで検証する
+- 絶対座標ではなく移動量・包含関係・順序を検証する
+- pixel exact が必要な spec だけ明示的に残す
+
+### AI Agent に投げる前に gate を固定する
+
+AI Agent に新機能を投げる前に、少なくとも以下を通すべきである。
+
+```sh
+npm run codex:preflight
+npm run cypress:emulator-smoke
+```
+
+この 2 つが通っていない状態で新機能を始めると、実装ミスと環境不備と legacy spec failure が混ざる。人間に画面確認を求める前に、自動 gate で「白画面ではない」「保存/認証の smoke が通る」ことを確認する。
+
+### 次の一手
+
+次の実装作業は CI の追加。
+
+`.github/workflows/test.yml` を作り、まず次を走らせる。
+
+- install
+- `npm run codex:preflight`
+- `npm run cypress:emulator-smoke`
+
+全 Cypress はまだ必須 gate にしない。残り 16 failing specs は quarantine list を作って、現行 Kozaneba の必須挙動と legacy regression を分けてから扱う。
+
 ## 推奨する進め方
 
 ### 1. 必須 smoke test を CI に載せる
