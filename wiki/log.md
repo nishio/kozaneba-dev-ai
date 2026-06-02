@@ -395,3 +395,17 @@ updated: 2026-05-25
   - `npm run build`: pass
   - `www.gstatic.com` 遮断の headless Chrome screenshot でも `#blank` の AppBar / StatusBar が表示されることを確認
 - `work/kozaneba` commit: `7d36437 Prevent blank boot from external auth CSS`
+
+## [2026-06-02] implement | 保存済み onLoad による boot 停止の防止
+
+- 再考:
+  - headless Chrome / Cypress は新規プロファイルで通る一方、人間の通常 Chrome だけ白画面になるなら、通常プロファイルに残る状態が第一候補
+  - Kozaneba は起動時に `localStorage.onLoad` を `eval` しており、保存済みユーザースクリプトの例外が React mount 前に boot を止めうる
+- `work/kozaneba` で追加修正:
+  - `run_user_script()` を `try/catch` で保護し、失敗してもアプリ本体を起動し続ける
+  - Cypress に壊れた `localStorage.onLoad` を注入しても `#blank` UI が表示されるテストを追加
+- 検証:
+  - `env -u ELECTRON_RUN_AS_NODE npx cypress run --spec cypress/e2e/kozaneba/test_line_label.cy.ts --config video=false`: 5 tests pass
+  - `npm test -- --watchAll=false`: pass
+  - `npm run build`: pass
+- `work/kozaneba` commit: `93d9102 Keep booting when saved user script fails`
