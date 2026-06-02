@@ -364,4 +364,6 @@ updated: 2026-05-25
   - `npm run build`: pass
   - Cypress spec は追加したが、Cypress 12.4.0 binary が macOS 上で `bad option: --smoke-test` により起動不能。E2E は未実行
   - in-app Browser は `iab` が空で利用不可
+- 追加対応:
+  - 当初 `#blank` を試用 URL として案内したが、`#blank` は空の場なので白いキャンバスになる。確認しやすいよう `#tinysample` を 2 こざね + 1 線のサンプルに変更
 - [themes/Plan_B試行_2026-06.md](themes/Plan_B試行_2026-06.md) の結果・含意セクションに初回実装の観察を追記。
