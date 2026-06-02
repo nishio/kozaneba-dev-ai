@@ -409,3 +409,17 @@ updated: 2026-05-25
   - `npm test -- --watchAll=false`: pass
   - `npm run build`: pass
 - `work/kozaneba` commit: `93d9102 Keep booting when saved user script fails`
+
+## [2026-06-02] implement | Codex 実装前 preflight の追加
+
+- nishio の指摘: 機能実装に入る前に、Codex が正しく実装・検証できる環境を整える必要がある。現状は根本的におかしい。
+- `work/kozaneba` に `scripts/codex-preflight.sh` と `npm run codex:preflight` を追加。
+- preflight の役割:
+  - dev server と `#blank` boot contract の確認
+  - 初期 HTML が gstatic Firebase UI CSS に依存しないことの確認
+  - dev server bundle が現在の実装を配っていることの確認
+  - `ELECTRON_RUN_AS_NODE` を外した Cypress 実行
+  - unit test と production build
+- `npm run codex:preflight`: pass。
+- 含意: 今後の Kozaneba 本体実装では、機能改修の前に preflight を通す。preflight が落ちたら環境整備を優先する。
+- `work/kozaneba` commit: `898daf2 Add Codex implementation preflight`
