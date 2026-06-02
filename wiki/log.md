@@ -349,3 +349,19 @@ updated: 2026-05-25
 - `work/kozaneba/` は `git fetch origin` / `git pull --ff-only` の結果 `Already up to date`。現 HEAD は `5de81c2`。
 - 指摘候補: `line_start != null` は現コードでは不正確で、未設定値は `""`。また `LineAnnot.tsx` は `custom.is_clickable` を見ず `const is_clickable = false` 固定なので、仕様の技術前提を補足した方がよい。
 - 追加で、表示本体は `Line.tsx` ではなく `LineAnnot.tsx`、保存には `mark_local_changed()` が必要、inline 編集 UI の確定/キャンセル/ショートカット干渉を明示した方が AI Agent の実装ぶれを減らせると整理。
+
+## [2026-06-02] implement | Plan B 辺ラベル UI 初回実装
+
+- 開始前に既存 wiki 変更を `bfcb16e Add Plan B edge label UI trial spec` として commit。
+- `work/kozaneba/` に辺ラベル inline 編集を実装:
+  - `LineAnnot.tsx` に透明 hit area を追加し、通常時の double-click で編集開始
+  - `foreignObject` + `input` による線中央 inline editor
+  - `Enter` / blur で確定、`Escape` でキャンセル、空文字は `delete annotation.label`
+  - `mouseState === "making_line"` 中は hit area を出さず、線終端確定を邪魔しない
+  - 確定時に `mark_local_changed()` を呼んで保存経路に乗せる
+- 検証:
+  - `npm test -- --watchAll=false`: pass
+  - `npm run build`: pass
+  - Cypress spec は追加したが、Cypress 12.4.0 binary が macOS 上で `bad option: --smoke-test` により起動不能。E2E は未実行
+  - in-app Browser は `iab` が空で利用不可
+- [themes/Plan_B試行_2026-06.md](themes/Plan_B試行_2026-06.md) の結果・含意セクションに初回実装の観察を追記。
