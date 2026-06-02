@@ -607,3 +607,10 @@ updated: 2026-05-25
 - 残した Issue は #4 console log、#12 browser extension docs、#13 CI/CD、#17 test coverage、#25 performance profiling。いずれも現在のコード事実に接続し、次の一手を小さく切れる。
 - 閉じた Issue は、古い前提、性能系の手段先行、UX/i18n/accessibility の一般論、大規模リファクタ単独 Issue として分類。
 - 学び: AI が生成した Issue は実行キューではなく提案の束であり、全文読解・コード照合・計測前提の分離・再発行条件の明示を経て Plan B の backlog に変換する必要がある。
+
+## [2026-06-03] query | Sentry の運用エラーも観察するべき
+
+- 現行コードを確認し、`work/kozaneba/src/initSentry.tsx` で production 時に Sentry が初期化され、例外時 report dialog と `getGlobal()` context 設定があることを確認。
+- [entities/Sentry.md](entities/Sentry.md) を新規作成し、2021-08 の導入経緯、現行実装、ユーザ試行錯誤エラーを Sentry に送るべきでないという注意点を整理。
+- [themes/運用エラー観察.md](themes/運用エラー観察.md) を新規作成し、Sentry issue を本体バグ、入力 validation、UserScript / 拡張、外部サービス、ブラウザ依存、開発ノイズに分類して読む手順を定義。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) と [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) に、Sentry を production 実害ベースの観測ソースとして接続した。

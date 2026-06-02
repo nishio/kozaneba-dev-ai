@@ -32,6 +32,9 @@ updated: 2026-06-03
 - [Devin](entities/Devin.md) — 2025 年に投入された自律型 AI エンジニア
 - [AIエンジニアたち](entities/AIエンジニアたち.md) — o1 Pro / GPT-5 / Claude / Devin の横断整理
 
+### 開発・運用ツール
+- [Sentry](entities/Sentry.md) — production エラーとユーザ feedback の観測ソース
+
 ## Concepts(概念)
 
 ### 方法論(KJ法系)
@@ -116,6 +119,7 @@ updated: 2026-06-03
 - [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、状態モデル中心のキャンバステスト戦略、UI テスト helper 整備方針の整理
 - [テスト改善計画](themes/テスト改善計画.md) — nested drag の知見を座標ロジック単体テストへ入れ、Kozaneba 本体 required CI を安定させてから Node / CRA 脱出へ進む3段階計画
 - [AI生成Issueのトリアージ](themes/AI生成Issueのトリアージ.md) — AI が生成した一般改善 Issue を、コード事実・実行単位・計測前提・製品方針で選別し、Plan B の実行可能 backlog に変換する判断基準
+- [運用エラー観察](themes/運用エラー観察.md) — Sentry の production error / feedback を Plan B の観測ソースとして読むための分類規準
 
 ## Sources(個別ソースの要約)
 

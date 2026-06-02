@@ -13,6 +13,7 @@ sources:
   - work/kozaneba/scripts/codex-preflight.sh
   - wiki/themes/Plan_B試行_2026-06.md
   - wiki/themes/テスト改善計画.md
+  - wiki/themes/運用エラー観察.md
 ---
 
 # AI生成Issueのトリアージ
@@ -100,6 +101,10 @@ Kozaneba のような思考支援ツールでは、一般的な UX 施策を足�
 
 今回の学びは、[AIエンジニアたち](../entities/AIエンジニアたち.md) を使った Kozaneba 改善で、AI Agent に何を任せるかの境界を示している。
 
+[運用エラー観察](運用エラー観察.md) は、この判断を補完する。AI 生成 Issue は「ありうる改善の提案」で、Sentry issue は「production で実際に起きた障害」である。ただしどちらも、そのまま実行キューではない。
+
+AI Issue はコード事実・製品方針・実行単位で選別する。Sentry issue は本体バグ、入力 validation 不足、UserScript / 拡張由来、外部サービス由来、ブラウザ依存に分類する。両方を wiki に戻してから、実装すべき小さな Issue / PR に変換する。
+
 AI Agent は Issue を大量に生成できる。しかし、生成された Issue は「今やるべきこと」を自動的には表さない。むしろ、人間または別の LLM が次を行う必要がある。
 
 1. Issue 全文を読む
@@ -136,3 +141,4 @@ GitHub Issues は実行キュー、wiki は判断理由の保存場所である�
 - [codex-preflight.sh](../../work/kozaneba/scripts/codex-preflight.sh)
 - [Plan B 試行 2026-06](Plan_B試行_2026-06.md)
 - [テスト改善計画](テスト改善計画.md)
+- [運用エラー観察](運用エラー観察.md)
