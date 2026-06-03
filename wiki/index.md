@@ -50,6 +50,7 @@ updated: 2026-06-03
 - [渾沌をして語らしめる](concepts/渾沌をして語らしめる.md) — 川喜田由来
 - [花火日報](concepts/花火日報.md)
 - [なめらかな畳まれ](concepts/なめらかな畳まれ.md) — ズームによる代替手法
+- [大きな付箋](concepts/大きな付箋.md) — なめらかな畳まれ に対する能動的対抗手段、人力 inverse-zoom title
 
 ### 思考のメタ概念
 - [ねりねり](concepts/ねりねり.md) — 構造の破壊と再生
@@ -75,6 +76,8 @@ updated: 2026-06-03
 - [Plurality](concepts/Plurality.md) — Audrey Tang / Glen Weyl
 - [ブロードリスニング](concepts/ブロードリスニング.md) — Plurality 由来
 - [広聴AI](concepts/広聴AI.md) — 2025、Kozaneba との「2つの」議論
+- [密度の高さを大きさに変換して可視化](concepts/密度の高さを大きさに変換して可視化.md) — 2025-08 Canvas プロトタイプの中心可視化原則
+- [内部構造がわかりやすい](concepts/内部構造がわかりやすい.md) — 可視化評価の肌感メトリック、機能 vs 見栄えのトレードオフ事例
 - [IOFI](concepts/IOFI.md)
 - [クリーンランゲージ](concepts/クリーンランゲージ.md) — Keichobot の方法論の中核
 
@@ -115,6 +118,9 @@ updated: 2026-06-03
 - [データモデル刷新の選択肢](themes/データモデル刷新の選択肢.md) — 1 巨大 JSON からの脱出、Yjs/Automerge/Loro/Zero/SQLite-WASM/CAS の比較、Loro ホスティング 3 ルート(Firestore + binary / Cloudflare DO+R2 / 自前 Hono+Postgres)
 - [線UIサーベイ 2026](themes/線UIサーベイ_2026.md) — Miro/FigJam/tldraw/Kinopio/Tana 他 16 ツールの connection 描画パターン分類と Kozaneba 改修案
 - [畳むUIの再設計](themes/畳むUIの再設計.md) — Pad++/Bret Victor/Heptabase/Magic Lens/AI 自動表札による「囲んで畳む」の刷新案
+- [Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) — 2025-08 の 1 万枚 Canvas プロトタイプ(本流ではないサイド実験)を 2026-06 サーベイで再評価し、続けるなら/知見を持ち帰るなら、という条件付きで semantic zoom / AI 表札 / first-class frame の適用可能性を整理
+- [認知メタファのデザイン](themes/認知メタファのデザイン.md) — 既知メタファを借りる、抽象度を上げない、という Kozaneba 設計哲学。散布図/KDE/付箋の比較から内部構造・見栄え・既知メタファの 3 軸トレードオフを抽出
+- [人間が動かすから隙間ができる](themes/人間が動かすから隙間ができる.md) — 本流(人間駆動の小規模)とプロトタイプ(アルゴ駆動の大規模)で「空間の隙間の意味」が違うことを示し、frame 抽象を機械的に統一しない理由を提供。物理演算 禁忌と同系統
 - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験
 - [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、状態モデル中心のキャンバステスト戦略、UI テスト helper 整備方針の整理
 - [テスト改善計画](themes/テスト改善計画.md) — PR #40〜#44 で CI / Vite 移行まで完了後、#17 を座標変換・hit test・undo/redo・保存復元などへ分解し、実測済みの旧 Movidea spec 棚卸しへ接続する計画
@@ -131,6 +137,7 @@ updated: 2026-06-03
 - [キャンバス状態テスト戦略 2026-06](sources/canvas-state-testing-strategy-2026-06.md) — ピクセル単位 E2E ではなく world 座標・状態モデル・イベント列を主対象にするキャンバスアプリのテスト設計メモ
 - [Movidea legacy test inventory 2026-06](sources/movidea-legacy-test-inventory-2026-06.md) — Java 21 + Firebase emulator で旧 Movidea Cypress 23 specs を実測し、promote / rewrite-before-decision / delete に分類した棚卸し
 - [静的 HTML export MVP 2026-06](sources/static-html-export-mvp-2026-06.md) — Ba JSON と軽量 read-only viewer を 1 ファイル HTML に埋め込む `Download Static HTML` 実装(PR #47)の記録
+- [Release Notes / フォーラム 2021-2025 要約](sources/release-notes-2021-2025.md) — kozaneba-forum (英 17 ページ) と kozaneba-forum-jp (日 48 ページ) の全件を読んだ要約。EN/JP の差分、機能カテゴリ別タイムライン、外部ユーザ一覧、公開された設計原則(「default で線が増えない方を選ぶ」「線を click 可能にすると ドラッグ が妨害される」)を抽出
 
 ## Meta
 

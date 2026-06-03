@@ -2,7 +2,7 @@
 title: Canvas 実装への移行検討
 type: theme
 created: 2026-05-16
-updated: 2026-06-02
+updated: 2026-06-03
 sources:
   - raw/scrapbox_kozaneba/2024-12-14__Kozanebaのコードを丸ごとo1_Proに入れる.md
   - raw/scrapbox_kozaneba/2025-09-11__pKozaneba2025-08-14.md
@@ -107,6 +107,16 @@ Canvas 移行論はもともと「Kozaneba の延長線上で大規模化どう�
 - **畳む UI の隙間問題**: group を frame に格上げ(自前 bounding rect)、Heptabase 型 inverse-zoom title、AI 自動表札 — これも Canvas 化以前に DOM で実装可能
 
 つまり Canvas 化は **「(a) 物理 / (b) ヒットテスト / (c) state shape」の 3 連動コスト** を払う判断であり、上記改修の多くは **Canvas 化を待たずに価値を出せる**。Canvas 化の動機は「2000 枚 → 10000 枚以上」のレンダリング性能と、フォルダレベルの最適化に絞られる。
+
+## 2026-06-03: 1 万件プロトタイプを 2026-06 サーベイで再評価
+
+[pKozaneba2025-08-26~27](../../raw/scrapbox_kozaneba/2025-08-26__pKozaneba2025-08-26~27.md) の Canvas プロトタイプは **本流とは独立したサイド実験**(本流 `work/kozaneba/` の改造ではない、Plan A / B のどちらにも属さない)で、「**密度の付箋化**」までは到達したが、ズームしても個別付箋の中身は変わらず、[なめらかな畳まれ](../concepts/なめらかな畳まれ.md) と同型の **graphical zoom に留まっている**。
+
+[畳むUIの再設計](畳むUIの再設計.md) で集めた **semantic zoom / inverse-zoom title / AI 自動表札 / first-class frame / Hierarchical Edge Bundling** を、**(a) プロトタイプ側で続ける場合 / (b) 知見を本流や Plan A に持ち帰る場合** という条件付きで適用すると、「**密度 → 大きさ**」と「**束 → 表札**」を同じ semantic zoom 軸で統一できる方向が見える。
+
+ただし「[pKozaneba2025-08-29](../../raw/scrapbox_kozaneba/2025-08-29__pKozaneba2025-08-29.md) の **10000 件路線 vs 1000 件路線** を分けるべき」という観察は重要で、両者は **空間構造の生成者(アルゴ駆動 vs 人間駆動)が違う** ため、frame 抽象を機械的に統一すると意味が壊れる可能性がある([人間が動かすから隙間ができる](人間が動かすから隙間ができる.md))。安易な統合は避ける。
+
+詳細は [Canvas 1 万件デモの拡張](Canvas_1万件デモの拡張.md)。プロトタイプから抽出した一般概念は [密度の高さを大きさに変換して可視化](../concepts/密度の高さを大きさに変換して可視化.md) / [認知メタファのデザイン](認知メタファのデザイン.md) / [大きな付箋](../concepts/大きな付箋.md) / [内部構造がわかりやすい](../concepts/内部構造がわかりやすい.md) に分離。
 
 ## Sources
 

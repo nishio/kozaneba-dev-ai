@@ -2,10 +2,12 @@
 title: Kozaneba
 type: entity
 created: 2026-05-16
-updated: 2026-05-25
+updated: 2026-06-03
 sources:
   - raw/scrapbox_kozaneba/2021-08-20__かんがえをまとめるデジタル文房具Kozaneba.md
   - raw/scrapbox_kozaneba/2021-09-02__Kozaneba.md
+  - raw/kozaneba-forum/
+  - raw/kozaneba-forum-jp/
   - work/kozaneba
 ---
 
@@ -65,6 +67,36 @@ Plan A は Kozaneba の直接の継承ではなく、Kozaneba を deprecate す�
 
 これは Plan B での最小改造を考えるとき、「**辺ラベル UI**」と「**源の長文フィールド**」が独立した 2 軸の改造起点になることを示唆する([3 Plan 議論](../themes/3plan議論.md))。前者はデータモデルに手を入れず UX 動線だけで済むが、後者はデータモデルそのものの拡張が必要。
 
+## 公開リリースのタイムライン
+
+[Release Notes 2021-2025 要約](../sources/release-notes-2021-2025.md) で外向きにアナウンスされた機能変更を時系列で整理。重要な節目:
+
+- **2021-08-02**: First release ([Movidea](Movidea.md) → Kozaneba 改名と同時)
+- **2021-08-20**: Beta release。日英フォーラム同時開設(英 [kozaneba-forum](https://scrapbox.io/kozaneba-forum/) / 日 [kozaneba-forum-jp](https://scrapbox.io/kozaneba-forum-jp/)、両方を最初から)
+- **2021-09-08**: Annotation Layer (矢印機能の最初の実装)
+- **2022-03-24**: Scrapbox Integration の本格化
+- **2022-05-31**: ブラウザ言語設定で日本語/英語チュートリアル自動切替(JP リリースノートにのみ記載)
+- **2023-02-27**: Tear / Merge 追加・Split 削除
+- **2025-04-27**: 外部ユーザ報告由来の bug fix 集中リリース (PR #18-21, #29、JP リリースノートにのみ記載)。iPad 互換性改善、チュートリアル section 2 crash 修正、白画面 Ba 修正、Gyazo 0 サイズ box 修正
+- **2025-08-09**: メニュー画像が壊れていた問題の修正 (PR #32、JP のみ)。原因は Gyazo がリダイレクト HTML を返す変更
+- **2025-09-11**: Merge 挙動変更・Scale Double 追加・Selection menu への変形操作集約 (PR #33-35)
+
+EN リリースノートと JP リリースノートには **明確な差**がある: 2022-05-31 / 2025-04-27 / 2025-08-09 のエントリは **日本語版にのみ**存在する。EN 側の更新は 2025-09-11 で 2023-02-28 から直接ジャンプしている。
+
+## 外部ユーザの活動
+
+公開フォーラムには複数の外部ユーザが要望・バグ報告・質問を投稿している:
+
+- `Foam_Crab` — 2021-08-31「Scrapboxのページをグルーピングしたい」要望(同日リリース)
+- `uchan_nos` — 2022-01-21「ホイールのドラッグでBaを移動したい」(CAD 風)、2022-01-25 中ボタンドラッグ実装
+- `kusanagi` / `k937gy` — 2022-01-25 Typo 報告 / ホイール感度フィードバック
+- `sta` (@sta) — 2022-08-10「Add Lines の挙動を知りたい」混乱報告。nishio 応答: 「線を引く機能は今後改善したいと思っていますが、**大手術になる**と思います」。2023-02-06 の中点ベース左右判定はこの混乱への部分的応答
+- `YJ` — 2022-09-21 存在しない Scrapbox page の crash bug 報告、2023-01-16 fix
+- `reira` — 2023-11-07 チュートリアル section 2 で crash 報告、2025-04-27 fix (PR #18)
+- `hoshihara` — 2024-02-27 白画面 Ba bug 報告、2025-04-27 fix (PR #21)
+
+これは「**他の人に使われて成長すること**」(2021-08-08 [Kozanebaを作ることで何がどうなればいいのか](../../raw/scrapbox_kozaneba/2021-08-08__Kozanebaを作ることで何がどうなればいいのか.md)) が部分的に実現していたことを示すが、活発な発展期(2022-2023)と長期メンテモード(2024-2025 春)の境目もはっきり見える。
+
 ## このリポジトリでの分量
 
 `raw/scrapbox_kozaneba/` に 403 ページ(タイトルに Kozaneba を含むものが 117 ページ)。最初のメンション 2017-09-03、最新 2026-05-16。年別の分布:
@@ -88,3 +120,5 @@ Plan A は Kozaneba の直接の継承ではなく、Kozaneba を deprecate す�
 
 - [かんがえをまとめるデジタル文房具Kozaneba](../../raw/scrapbox_kozaneba/2021-08-20__かんがえをまとめるデジタル文房具Kozaneba.md)
 - [Kozaneba](../../raw/scrapbox_kozaneba/2021-09-02__Kozaneba.md)
+- [raw/kozaneba-forum/](../../raw/kozaneba-forum/) — 公式英語 forum 全 17 ページ(Release Notes 含む、2021-06 〜 2025-09)
+- [raw/kozaneba-forum-jp/](../../raw/kozaneba-forum-jp/) — 公式日本語 forum 全 48 ページ(リリースノート、ユーザ要望・バグ報告、チュートリアル和訳、2021-08 〜 2025-08)

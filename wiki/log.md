@@ -733,3 +733,73 @@ updated: 2026-06-03
 - 検証: `npm run build`、`npm test`、`npm run codex:preflight` が pass。JDK 21 を `JAVA_HOME=/opt/homebrew/opt/openjdk@21` で指定し、`CYPRESS_BASE_URL=http://localhost:3001 npm run cypress:kozaneba-all` が 18 specs / 34 tests pass。
 - `codex/ipad-pointer-events` branch に commit `e517035 Add pointer event input handling` を作成し、draft PR [#46](https://github.com/nishio/kozaneba/pull/46) を作成。
 - [themes/iPad実機対応調査_2026-06.md](themes/iPad実機対応調査_2026-06.md) に実装メモ、PR 情報、未完了 gate としての iPad 実機 smoke test を追記。
+
+## [2026-06-03] ingest | kozaneba-forum Release Notes(初期 ingest、JP forum 名称の誤りを含む)
+
+- Cosense CLI (`cosense browsePage`) で https://scrapbox.io/kozaneba-forum/Release_Notes を取得し保存(449 行、2021-06-25 〜 2025-09-11)。
+- **重要な誤り**: この時点で「日本語版 `kozaneba-forum-ja` は存在しない(HTTP 404)」と書いたが、正しい名前は `-jp` だった。次のエントリで修正。
+- 新規ページ [sources/release-notes-2021-2025.md](sources/release-notes-2021-2025.md) を作成し、entities/Kozaneba.md / concepts/線を引く機能.md / concepts/Scrapboxこざね.md / themes/活用されなかった機能.md を更新。
+- これらの更新内容は次の bilingual ingest で大幅に拡張・上書きされる。
+
+## [2026-06-03] ingest | kozaneba-forum + kozaneba-forum-jp 全件 ingest
+
+- 上の誤りの指摘を受けて再調査:日本語 forum は `kozaneba-forum-jp` で存在(`-ja` ではなく `-jp`)。[2021-08-20__Kozaneba開発日記2021-08-20.md](../raw/scrapbox_kozaneba/2021-08-20__Kozaneba開発日記2021-08-20.md) などで `/kozaneba-forum-jp/` の表記を確認。
+- nishio の要望「多分どっちのフォーラムも全部読んでも大した量ではないと思うのでやって」に従い、両 forum の全ページを Cosense CLI で取得:
+  - `raw/kozaneba-forum/` 17 ページ(EN)
+  - `raw/kozaneba-forum-jp/` 48 ページ(JP)
+- 既存の `raw/Release_Notes_kozaneba-forum.md` と `raw/Release_Notes_kozaneba-forum-jp.md` をそれぞれ subdir に移動・リネーム(`Release_Notes.md` / `リリースノート.md`)。
+- wiki の参照パスを subdir 構造に一括更新(5 ファイル: entities/Kozaneba.md / concepts/線を引く機能.md / concepts/Scrapboxこざね.md / themes/活用されなかった機能.md / sources/release-notes-2021-2025.md)。
+- [sources/release-notes-2021-2025.md](sources/release-notes-2021-2025.md) を全面書き直し:
+  - **JP forum 不存在の誤り**を修正
+  - EN/JP リリースノートの差分を明示:**JP のみ**に 2022-05-31(日本語チュートリアル自動化)/ 2025-04-27(PR #18-21, #29 の外部ユーザ報告 bug fix 集中リリース)/ 2025-08-09(Gyazo リダイレクト由来 menu 画像破損修正、PR #32) が記載
+  - **「2 年半の沈黙」**主張を修正:2023-03 〜 2025-03 は実質沈黙だが、その後 2025-04-27 / 08-09 / 09-11 と段階的に再開
+  - 外部ユーザ一覧(Foam_Crab, uchan_nos, k937gy, kusanagi, sta, YJ, reira, hoshihara)を整理
+  - 公開された 3 つの設計原則を抽出:**「default で線が増えない方を選ぶ」**(Remove Split-Kozane 2023-02-27)、**「線をクリック可能にするとドラッグが妨害される」**(Scrapbox Integration 2022-05-26)、**「線は本質ではない、迷うなら近接で」**(Drawing lines 2022-03-08)
+- 既存ページに新証拠を追記:
+  - [entities/Kozaneba.md](entities/Kozaneba.md) — タイムラインの誤りを修正、外部ユーザ活動セクションを追加
+  - [concepts/線を引く機能.md](concepts/線を引く機能.md) — エッジ pointerEvents:none の設計意図(Scrapbox Integration から)、外部ユーザ sta の Add Lines 混乱、「default で線が増えない方を選ぶ」原則を追記
+  - [concepts/Scrapboxこざね.md](concepts/Scrapboxこざね.md) — リンクをクリック可能にしない設計判断、外部ユーザ YJ の crash 報告を追記
+  - [themes/活用されなかった機能.md](themes/活用されなかった機能.md) — 「default で線が増えない方を選ぶ」原則を Split 削除事例の subsection として追加
+  - [concepts/チュートリアル.md](concepts/チュートリアル.md) — 多言語化タイムライン(2021-08 英語版 → 2021-08 手動和訳 → 2022-05 改訂 → 2022-05-31 ブラウザ言語自動切替)、ユーザテスト募集(2021-08-19)を追記
+  - [index.md](index.md) — sources/release-notes-2021-2025.md の説明文を「両 forum 全件」に更新
+- 主要な再発見と確定事項:
+  - 物理演算は 2021-09-16 以降リリースノートに登場せず default 機能化されていない事実は変わらず。**nishio 本人が「今は重視していない」と確認済**(feedback memory に保存)
+  - 2025-09-11 のリリースで線ラベル機能は **user-facing 告知ゼロ**(コード merge 済み `4c9b38d` / `5de81c2` がリリースノート両 forum に非掲載)。**nishio 本人が「現時点でも動線がよくわからん」と確認**(feedback memory に保存)
+  - JP forum は **ベータリリース時点(2021-08-20)から開設**、日英バイリンガル運営は最初から計画されていた。中国語フォーラムは未着手
+  - EN/JP リリースノートの非対称性は「他の人に使われて成長する」の対象が事実上日本語圏に絞られている可能性を示唆
+
+## [2026-06-03] ingest | pKozaneba2025-08-26~27 の追加概念抽出 + 直前の framing 訂正
+
+- nishio の指摘 1:[pKozaneba2025-08-26~27](../raw/scrapbox_kozaneba/2025-08-26__pKozaneba2025-08-26~27.md) には「1 万件デモ」以外にも有用な概念の切り口がある(7 つ提案 → 全部やる)
+- nishio の指摘 2:Canvas プロトタイプは **Kozaneba 本流改修ではなくサイド実験** であることを忘れずに書く
+- 直前の作業([Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md))で「本流改修と読める書き方」「Plan B 改造の範囲」と書いてしまった部分を訂正。framing を「サイド実験」「条件付きで適用可」に統一
+- 新規 concept 3 本:
+  - [大きな付箋](concepts/大きな付箋.md) — ズームアウトでも読める付箋。[なめらかな畳まれ](concepts/なめらかな畳まれ.md) と対の関係、人力 inverse-zoom title 相当
+  - [密度の高さを大きさに変換して可視化](concepts/密度の高さを大きさに変換して可視化.md) — 2025-08 プロトタイプの中心可視化原則。Kernel Density Estimation との比較、パラメータトレードオフを記録
+  - [内部構造がわかりやすい](concepts/内部構造がわかりやすい.md) — 可視化評価の肌感メトリック。半透明散布図が「内部構造で勝ったが見栄えで負けた」失敗事例
+- 新規 theme 2 本:
+  - [認知メタファのデザイン](themes/認知メタファのデザイン.md) — 既知メタファを借りる、抽象度を上げない、という Kozaneba 設計哲学。散布図/KDE/付箋の比較から内部構造・見栄え・既知メタファの 3 軸トレードオフを抽出
+  - [人間が動かすから隙間ができる](themes/人間が動かすから隙間ができる.md) — 本流(人間駆動)とプロトタイプ(アルゴ駆動)の本質的な違いを言語化。[物理演算](concepts/物理演算.md) 禁忌と同系統、frame 抽象を機械的に統一しない理由
+- 既存ページ更新:
+  - [themes/Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) — 全面改稿。冒頭に「サイド実験であって本流改修ではない」明示、拡張案は「続けるなら/知見を持ち帰るなら」の条件付き、「Plan B 改造の範囲」表記を削除
+  - [themes/Canvas移行の検討](themes/Canvas移行の検討.md) — 2026-06-03 節をサイド実験 framing に修正、frame 抽象の機械的統一の危険性を追加
+  - [themes/畳むUIの再設計](themes/畳むUIの再設計.md) — 広聴 AI セクションをサイド実験 framing に修正
+  - [concepts/なめらかな畳まれ](concepts/なめらかな畳まれ.md) — [大きな付箋](concepts/大きな付箋.md) へのリンク追加
+  - [concepts/広聴AI](concepts/広聴AI.md) — サイド実験としての Canvas プロトタイプ節を追加、新規 4 ページにリンク
+  - [themes/Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 仮説の前史として 2025-08 サイド実験での AI 一発実装の体感を追加(ただし本流の局所改修とゼロから書く状況の差は本実験で測る、と但し書き)
+- メモリ追加: `feedback_canvas_kozaneba_prototype.md`(feedback type)— 今後同じ framing ミスを繰り返さないため
+- 主要な発見:
+  - 「内部構造がわかりやすい / 見栄え / 既知メタファ」の 3 軸トレードオフは Kozaneba 設計判断を読む新しい軸として有効
+  - 本流(人間駆動)とプロトタイプ(アルゴ駆動)の「隙間の意味」の違いは、[物理演算](concepts/物理演算.md) の「機械が動かしてはいけない」と同じ系統で、Kozaneba 設計思想の通奏低音として読み直せる
+  - 「賢い AI Agent は過去実装を簡単に直す」仮説は 2025-08 のサイド実験での体感が起点で、Plan B 試行はゼロから書くのと既存に手を入れるのの差を測っている
+
+## [2026-06-03] query | 1 万件 Canvas デモと 2026-06 サーベイの接続
+
+- nishio の問い:scrapbox.io/nishio で記憶している「Kozaneba か チームみらい の可視化で 1 万件付箋を Canvas でズーム」デモが、最近の段階的詳細化 / グループ表示高サーベイで改良できそう、という勘の確認。
+- 該当デモを特定:[pKozaneba2025-08-26~27](../raw/scrapbox_kozaneba/2025-08-26__pKozaneba2025-08-26~27.md) の Canvas プロトタイプ(`https://canvas-kozaneba-prototype.vercel.app/`)。動機は [広聴AI](concepts/広聴AI.md) のリーフノード = 付箋化、実装は Kozaneba 側の Canvas プロト。UMAP → NOTE_SIZE=120 グリッドスナップ → 螺旋分散 → 「密度の高さを大きさに変換」まで到達、ただし graphical zoom 止まり。
+- サーベイ([畳むUIの再設計](themes/畳むUIの再設計.md))の **inverse-zoom title / AI 自動表札 / first-class frame / Hierarchical Edge Bundling** が直接効くと判定。「密度 → 大きさ」と「束 → 表札」を同じ semantic zoom 軸で統一でき、[pKozaneba2025-08-29](../raw/scrapbox_kozaneba/2025-08-29__pKozaneba2025-08-29.md) の「10000 件路線 vs 1000 件路線」を同じ frame + 表札抽象で両立させる道が見える。
+- 新規 [themes/Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) を作成し、実装順(inverse-zoom 試作 → AI 表札 → frame 一級化 → edge bundling)と残された問い(Plan A との関係、AI 表札の信頼性、Kernel Density Estimation との比較で立てた「1 つ 1 つが意見」が表札化で崩れる懸念)を整理。
+- 既存ページ更新:
+  - [themes/Canvas移行の検討](themes/Canvas移行の検討.md) — 末尾に「2026-06-03: 1 万件デモを 2026-06 サーベイで再評価」節を追加
+  - [themes/畳むUIの再設計](themes/畳むUIの再設計.md) — 「広聴 AI 1 万件ケースへの適用」節と関連リンクを追加
+  - [index.md](index.md) — 新ページをカタログに追加

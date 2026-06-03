@@ -2,7 +2,7 @@
 title: 畳む UI の再設計 — Semantic Zoom / Frame / Magic Lens / AI 表札
 type: theme
 created: 2026-06-01
-updated: 2026-06-01
+updated: 2026-06-03
 sources:
   - 2026-06-01 のセッション(nishio による問題提起)
   - work/kozaneba/src/Global/TItem.ts (group)
@@ -145,6 +145,20 @@ Magic Ink の枠組みで本テーマを言い直すと:
 
 「**畳む / 開く** を明示的 command として残しつつ、context によって **自動的に何が見えるかが変わる**」というハイブリッド設計が現実解。完全自動は [物理演算](../concepts/物理演算.md) と同じく「機械が動かしてはいけない」の禁忌に触れる可能性が高い。
 
+## 広聴 AI 1 万件ケースへの適用(本流ではなくサイド実験側)
+
+[Canvas移行の検討](Canvas移行の検討.md) で扱った 2025-08 のプロトタイプ([pKozaneba2025-08-26~27](../../raw/scrapbox_kozaneba/2025-08-26__pKozaneba2025-08-26~27.md))は **本流 Kozaneba ではなく [広聴AI](../concepts/広聴AI.md) 由来の独立サイド実験**(deploy: `canvas-kozaneba-prototype.vercel.app`、`work/kozaneba/` 本流とは別実装)。
+
+本ページの対象(本流の「囲んで畳む」改修)から見ると別系統だが、**プロトタイプ側で続けるなら / 知見を持ち帰るなら** という条件付きで同じ枠組みが効きうる:
+
+- **inverse-zoom title**: 螺旋グリッドに集まった N 枚を、閾値以下のズームでは **代表 1 枚だけ大きく描く**
+- **AI 自動表札**: 集まった N 枚を LLM で要約 → グリッド代表表札にする。広聴 AI 側の凝集クラスタリングと併用しても自然(クラスタ ID = 表札の単位)
+- **first-class frame**: プロトタイプ側で frame 抽象を入れれば、本流側の group 改修(本ページの本論)と **同じパターン** が両方に並存する
+
+ただし両者を **データモデル上で同じ型に統合するかは独立の判断**。[人間が動かすから隙間ができる](人間が動かすから隙間ができる.md) で示すとおり、**アルゴ生成 frame と人間配置 frame では「隙間の意味」が違う**(前者は副産物、後者は意思決定の投影)ため、frame 抽象を機械的に揃えると意味が壊れる可能性がある。
+
+詳細は [Canvas 1 万件デモの拡張](Canvas_1万件デモの拡張.md)。
+
 ## 開いた問い
 
 - 現状 `RTGroupItem` の子は **グローバル座標** か **group 相対座標** か(コード未確認、Plan B 改修の起点として要確認)
@@ -161,6 +175,7 @@ Magic Ink の枠組みで本テーマを言い直すと:
 - [物理演算](../concepts/物理演算.md) — auto-layout reflow との緊張関係
 - [Clean Relation Elicitation](Clean_Relation_Elicitation.md) — AI による Formulate / 表札生成
 - [Canvas移行の検討](Canvas移行の検討.md) — レンダリング層改修との並行作業
+- [Canvas 1 万件デモの拡張](Canvas_1万件デモの拡張.md) — 本ページの提案を広聴 AI 由来の 1 万件プロトタイプに適用
 - [3 Plan 議論](3plan議論.md) — Plan B 改造の優先順位
 - [データモデル刷新の選択肢](データモデル刷新の選択肢.md) — 同時期のデータ層サーベイ
 - [線UIサーベイ 2026](線UIサーベイ_2026.md) — 同時期の UI サーベイ
