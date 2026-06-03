@@ -117,10 +117,11 @@ updated: 2026-06-03
 - [畳むUIの再設計](themes/畳むUIの再設計.md) — Pad++/Bret Victor/Heptabase/Magic Lens/AI 自動表札による「囲んで畳む」の刷新案
 - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験
 - [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、状態モデル中心のキャンバステスト戦略、UI テスト helper 整備方針の整理
-- [テスト改善計画](themes/テスト改善計画.md) — PR #40〜#44 で CI / Vite 移行まで完了後、#17 を座標変換・hit test・undo/redo・保存復元などへ分解し、旧 Movidea spec を棚卸しする方針
+- [テスト改善計画](themes/テスト改善計画.md) — PR #40〜#44 で CI / Vite 移行まで完了後、#17 を座標変換・hit test・undo/redo・保存復元などへ分解し、実測済みの旧 Movidea spec 棚卸しへ接続する計画
 - [CI安定化とVite移行 2026-06](themes/CI安定化とVite移行_2026-06.md) — 座標ロジック単体テスト、required CI、Node 24、CRA から Vite への移行、production console log cleanup を PR #40〜#45 で完了した実施記録と学び
 - [AI生成Issueのトリアージ](themes/AI生成Issueのトリアージ.md) — AI が生成した一般改善 Issue を、コード事実・実行単位・計測前提・製品方針で選別し、Plan B の実行可能 backlog に変換する判断基準
 - [運用エラー観察](themes/運用エラー観察.md) — Sentry の production error / feedback を Plan B の観測ソースとして読むための分類規準
+- [iPad実機対応調査 2026-06](themes/iPad実機対応調査_2026-06.md) — mouse event 前提の現行キャンバス実装、touch/pointer 対応の問題候補、iPad 実機 smoke test 手順と完了条件
 
 ## Sources(個別ソースの要約)
 
@@ -128,6 +129,8 @@ updated: 2026-06-03
 - [Kozaneba git history 2025 要約](sources/kozaneba-git-history-2025.md) — `work/kozaneba` の `git log` を読んだ、2025 年の主要な実装・設計変更の要約
 - [Kozaneba コード構造調査 2026-05](sources/kozaneba-code-architecture.md) — `work/kozaneba/` 現コードの構造、Item/Annotation スキーマ、物理演算実装、辺ラベルや N項関係がスキーマ上は実装済みである事実
 - [キャンバス状態テスト戦略 2026-06](sources/canvas-state-testing-strategy-2026-06.md) — ピクセル単位 E2E ではなく world 座標・状態モデル・イベント列を主対象にするキャンバスアプリのテスト設計メモ
+- [Movidea legacy test inventory 2026-06](sources/movidea-legacy-test-inventory-2026-06.md) — Java 21 + Firebase emulator で旧 Movidea Cypress 23 specs を実測し、promote / rewrite-before-decision / delete に分類した棚卸し
+- [静的 HTML export MVP 2026-06](sources/static-html-export-mvp-2026-06.md) — Ba JSON と軽量 read-only viewer を 1 ファイル HTML に埋め込む `Download Static HTML` 実装(PR #47)の記録
 
 ## Meta
 

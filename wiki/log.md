@@ -641,3 +641,95 @@ updated: 2026-06-03
 - Issue #4 は、PR #45 `Route production console logs through dev logger` で runtime `console.log` / `console.time` / `console.timeEnd` を `dev_log` / `dev_time` に寄せ、merge により close。
 - PR #45 は local の `npm test`、`npm run build`、`npm run codex:preflight`、`npm audit --audit-level=moderate`、PR CI、main post-merge CI が success。
 - [themes/CI安定化とVite移行_2026-06.md](themes/CI安定化とVite移行_2026-06.md) と [themes/AI生成Issueのトリアージ.md](themes/AI生成Issueのトリアージ.md) を更新し、残る open Issue は #12 / #17 / #25 の 3 件だと整理。
+
+## [2026-06-03] query | Movidea legacy test actual behavior audit
+
+- Java 21 を Homebrew で導入し、`firebase-tools@15` の emulator 要件を満たした上で Movidea legacy Cypress を実測。
+- `npm run cypress:emulator-smoke` は `movidea/login.cy.ts`、`movidea/save.cy.ts`、`kozaneba/test_tutorial.cy.ts` が pass。
+- `cypress/e2e/movidea/*.cy.ts` 全体は 23 specs / 25 tests のうち 9 passing / 16 failing、Cypress summary では 15 of 23 specs failed。
+- [sources/movidea-legacy-test-inventory-2026-06.md](sources/movidea-legacy-test-inventory-2026-06.md) を新規作成し、各 spec を promote 13 / rewrite-before-decision 5 / delete 5 に分類。
+- [themes/テスト改善計画.md](themes/テスト改善計画.md) と [index.md](index.md) を更新し、#17 の分解方針を実測済みの Movidea 棚卸しへ接続した。
+
+## [2026-06-03] query | 線を引く機能の実装箇所確認
+
+- `work/kozaneba` は main / origin/main と一致し、コード本体は clean。未追跡は過去 Cypress failure の `cypress/screenshots/` のみ。
+- 線は `src/Global/TAnnotation.ts` の `line` annotation として表現され、作成 UI は `src/Menu/AddLineMenuItem.tsx`、確定処理は `src/Event/handle_making_line.ts`、描画とラベル編集は `src/Canvas/Annotation/LineAnnot.tsx` にある。
+- inline 辺ラベル編集は commit `9e7122b Add inline line label editing` で入り、その後 `7d36437` / `93d9102` / `898daf2` で白画面・保存済み user script・preflight が整備された。
+- 再開時の確認入口は `npm run codex:preflight` と `cypress/e2e/kozaneba/test_line_label.cy.ts`。
+
+## [2026-06-03] query | 未マージブランチ確認
+
+- `git fetch --prune origin` 後に確認したところ、local branch はすべて `main` に merge 済み。
+- remote で `origin/main` に未マージなのは `origin/devin/1741687705-update-dependencies` のみ。Firebase / React / dependency migration 系の古い分岐で、線ラベル実装とは別。
+- 線ラベル系の `origin/devin/1757526061-line-labels` は merge 済み側にあり、main には PR #36 の Devin 実装と、その後の `9e7122b Add inline line label editing` が入っている。
+
+## [2026-06-03] query | iPad で動かない原因候補と実機テスト手順
+
+- `work/kozaneba` に未追跡 `cypress/screenshots/` があったため、`origin/main` から detached worktree `work/kozaneba-ipad-audit` (`d5757f5`) を作ってコードを確認。
+- 現行キャンバス操作は `onMouseDown` / `onMouseMove` / `onMouseUp` 中心で、`touch_support` は定義のみ未使用。`get_client_pos` も `clientX/clientY` 前提で TouchEvent を扱わない。
+- iPad 不具合の主候補として、mouse event 前提、group drop の hover 依存、`touch-action` 未指定、FirebaseUI の popup sign-in 固定を整理。
+- [themes/iPad実機対応調査_2026-06.md](themes/iPad実機対応調査_2026-06.md) を新規作成し、PointerEvent 中心の修正方針、LAN dev server 接続手順、iPad 実機 smoke test checklist、Safari Web Inspector / Sentry での観測方針を保存。
+- [index.md](index.md) に同ページを追加。
+
+## [2026-06-03] query | iPad 実機自動テストはどの程度可能か
+
+- Apple Safari WebDriver、Appium XCUITest / mobile web、Cypress、Playwright、BrowserStack の公式情報を確認。
+- 結論: iPad 実機 Safari 自動化は可能だが、Cypress の延長ではなく、Selenium/safaridriver、Appium、または BrowserStack 等のクラウド実機サービスが必要。
+- Cypress は desktop CI と viewport / WebKit 近似に留め、Playwright emulation は cheap regression、実機 smoke はまず手動、必要になったら Appium/Selenium または BrowserStack Playwright で狭く自動化する方針。
+- [themes/iPad実機対応調査_2026-06.md](themes/iPad実機対応調査_2026-06.md) に「iPad実機自動テストの可能範囲」と「現実的な段階」を追記。
+
+## [2026-06-03] query | 古いレンダリング方式を別デプロイで保持できるか
+
+- [sources/kozaneba-code-architecture.md](sources/kozaneba-code-architecture.md) と [themes/Canvas移行の検討.md](themes/Canvas移行の検討.md) を読み、現行 Kozaneba は Netlify hosting / hash routing / Firestore `ba` collection の SPA であることを確認。
+- `work/kozaneba` は dirty なので読むだけにし、`netlify.toml`、`vite.config.ts`、`src/App/App.tsx`、`src/Cloud/*`、`firestore.rules` で、同じ `#view=<ba>` を別ビルドから読む構成が自然に成立することを確認。
+- Netlify 公式 docs で branch deploy / deploy permalink / rollback / locked deploy が現在も提供されていることを確認。ただし長期保存用途では単発 permalink より専用 branch または専用 site のほうが管理しやすい。
+- 結論: 古い作品を壊さず見せる目的なら「古い viewer を read-only 別デプロイとして保持」は現実的。注意点はデータ schema migration、Firebase Auth authorized domain、古い依存の build 再現性、同じ Firestore への write を避けること。
+
+## [2026-06-03] query | データ込み静的 HTML ダウンロードは可能か
+
+- [sources/kozaneba-code-architecture.md](sources/kozaneba-code-architecture.md) と [themes/データモデル刷新の選択肢.md](themes/データモデル刷新の選択肢.md) を入口に、現行の「場 = JSON doc」構造を確認。
+- `work/kozaneba` は dirty なので読むだけにし、`state_to_docdate` / `docdate_to_state` / `Blank` / `LocalBackup` / `copy_json` / 画像系 component を確認。Firestore doc 相当 JSON を HTML に埋めて起動時に state へ流し込む実装は小さく作れる。
+- ただし完全な単一ファイル・オフライン閲覧を目指す場合、Firebase/Sentry/GA を含まない static viewer entry、inline bundle、JSON の script 埋め込み時 escaping、Gyazo/Scrapbox/favicons など外部画像の扱いを別途設計する必要がある。
+- 結論: 可能。最初は「データ埋め込み + 同梱 read-only viewer + 外部画像は URL のまま」が現実的で、厳密なアーカイブは画像も data URI / ZIP へ取り込む後続段階に分ける。
+
+## [2026-06-03] query | Movidea legacy test cleanup implementation
+
+- `work/kozaneba` で旧 Movidea spec の最初の整理 pass を実施。
+- `add_kozane_dialog`、login/save smoke、scale 表示、selection hit test、Regroup import、font-size algorithm、legacy `piece` upgrade を Kozaneba Cypress または unit test に移した。
+- 旧 Movidea folder から、移植済み 6 specs と delete 判定 5 specs を削除し、残りは 12 specs に縮小。
+- `scripts/cypress-emulator-smoke.sh` は Movidea path ではなく Kozaneba path の login/save/tutorial を実行するよう更新。
+- 検証: `npm test` 8 files / 14 tests pass、`npm run build` pass、`npm run cypress:emulator-smoke` 3 specs / 3 tests pass、`npm run cypress:kozaneba-all` 21 specs / 40 tests pass。
+- [sources/movidea-legacy-test-inventory-2026-06.md](sources/movidea-legacy-test-inventory-2026-06.md) に実装反映状況を追記。
+
+## [2026-06-03] query | Movidea legacy test cleanup completion
+
+- 残っていた Movidea 12 specs を、geometry / drag-drop state / selection make-group / font-size render contract へ分解して現行 test に移した。
+- `src/dimension/item_layout.test.ts` と `src/Event/drag_drop_state.test.ts` を追加し、旧 pixel exact DOM assertion と direct HTML5 drag/drop の代わりに world/state invariant を固定。
+- `cypress/e2e/kozaneba/test_adjust_font_size.cy.ts` を追加し、`test_selection.cy.ts` に selection -> make group regression を追加。
+- `cypress/e2e/movidea/` の legacy specs は 0 本になった。
+- 検証: `npm test` 10 files / 23 tests pass、`npm run build` pass、`npm run cypress:kozaneba-all` 22 specs / 42 tests pass。smoke は同じ Kozaneba login/save/tutorial path で pass 済み。
+- [sources/movidea-legacy-test-inventory-2026-06.md](sources/movidea-legacy-test-inventory-2026-06.md) を最終状態へ更新。
+
+## [2026-06-03] query | ブラウザの「完全保存」に外部画像アーカイブを任せられるか
+
+- 静的 HTML を開いた後にブラウザの「Webpage, Complete」で保存してもらう案を検討。
+- 結論: 手軽な fallback としては使えるが、長期アーカイブ仕様としては弱い。保存対象、外部画像、lazy load、module chunk、CSS/フォント、URL 書き換え、認証付き/リダイレクト付き画像の扱いがブラウザ依存になる。
+- Kozaneba では「アプリ生成の静的 viewer + Ba JSON」を一次成果物にし、外部画像は最初 URL のまま。完全アーカイブが必要になったら app 側で画像 URL を列挙して fetch/data URI 化、または HTML + assets の zip 出力に進むのがよい。
+
+## [2026-06-03] query | 静的 HTML ダウンロード MVP 実装
+
+- `work/kozaneba` が dirty だったため、`work/kozaneba-static-html-export` detached worktree を作成して実装を隔離。
+- `src/StaticExport/build_static_html.ts` を追加し、Firestore doc 相当 JSON を HTML 内の application/json script に埋め、軽量 read-only viewer でこざね / open・closed group / Scrapbox / Gyazo / line label / pan・zoom・fit を表示する MVP を実装。外部画像は URL のまま。
+- `src/StaticExport/download_static_html.ts` と Main menu の `Download Static HTML` を追加し、現在の Ba を `state_to_docdate` で JSON 化して `.html` として Blob download する導線を追加。
+- テスト: `npm test -- src/StaticExport/build_static_html.test.ts`、`npm test`、`npm run build`、`npm run codex:preflight` が pass。in-app browser ではメニュー表示を確認、download event は Codex in-app browser 非対応のため未検証。
+- `codex/static-html-export` branch に commit `1e3d09e Add static HTML export` を作成し、draft PR [#47](https://github.com/nishio/kozaneba/pull/47) を作成。PR 作成直後の GitHub Actions は running。
+- [sources/static-html-export-mvp-2026-06.md](sources/static-html-export-mvp-2026-06.md) を新規作成し、MVP の範囲、軽量 viewer にした理由、外部画像を URL のままにした判断、検証結果、今後の判断点を保存。
+
+## [2026-06-03] query | iPad PointerEvent 対応実装
+
+- `work/kozaneba` が dirty だったため、clean worktree `work/kozaneba-pointer-events` に branch `codex/ipad-pointer-events` を作成して実装を隔離。
+- mouse / pointer / touch の座標正規化、canvas の pointer capture、`touch-action: none`、pointerup 座標ベースの group drop 判定を追加。
+- `cypress/e2e/kozaneba/test_pointer_events.cy.ts` を追加し、synthetic `pointerType: "touch"` で drag、selection、group drop を確認。
+- 検証: `npm run build`、`npm test`、`npm run codex:preflight` が pass。JDK 21 を `JAVA_HOME=/opt/homebrew/opt/openjdk@21` で指定し、`CYPRESS_BASE_URL=http://localhost:3001 npm run cypress:kozaneba-all` が 18 specs / 34 tests pass。
+- `codex/ipad-pointer-events` branch に commit `e517035 Add pointer event input handling` を作成し、draft PR [#46](https://github.com/nishio/kozaneba/pull/46) を作成。
+- [themes/iPad実機対応調査_2026-06.md](themes/iPad実機対応調査_2026-06.md) に実装メモ、PR 情報、未完了 gate としての iPad 実機 smoke test を追記。
