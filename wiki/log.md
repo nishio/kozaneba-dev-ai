@@ -896,3 +896,40 @@ updated: 2026-06-03
   - **「コード上に rendering ロジックが存在する」≠「機能として完成」**。default UX 統合 / 設計判断解決 / 当事者の納得、の 3 段階を区別する
   - 「AI ペアプロが best practice を先取りした」と読みたがる引力は強いが、**実装スピードと設計判断スピードを別物として扱う** ことで仮説検証の解像度が上がる
   - Scrapbox の **最終エントリの最後の一文** を読むことの重要性。「実装した」commit があってもその日の議論が未解決で終わっているなら、それは「完成」ではなく「停止」
+
+## [2026-06-03] tooling | Scrapbox 参照 13 map を静的 HTML 化、kozaneba 本体 examples/ に同梱
+
+- 文脈:同日に [query | 静的 HTML ダウンロード MVP 実装](#) で `Download Static HTML` を MainMenu に追加(commit `1e3d09e` on `codex/static-html-export`)。これを使って Scrapbox から参照されている既存 map を静的化し、kozaneba 本体のサンプルとして commit する流れ
+- 抽出:`raw/scrapbox_kozaneba/` を `https://kozaneba\.netlify\.app/#view=...` で grep → 13 件の view ID(各 1 ページから参照、1:1 対応)。当初 14 件と誤カウントしたが正しくは 13 件
+- 経路:`work/kozaneba-static-html-export/` で Vite dev (`http://127.0.0.1:3000`)を起動 → Playwright(headless Chromium、`/tmp/kozaneba-export/`)で各 `#view=<id>` を巡回 → LoadingDialog が auto-close せず Close ボタン待ち(匿名ユーザは `can_write()=false`、`firestore.rules` で `allow get: if true` のみ)→ MainMenu(`data-testid="main-menu"`)→ `Download Static HTML` → page.on('download') を blob 経由で保存
+- 成果物:`kozaneba/examples/<YYYY-MM-DD>__<slug>.html` × 13 + `examples/README.md`(各 file の inner title / Scrapbox 元ページ URL / view ID を列挙)。合計 1.4MB、commit `7a992a8` on `codex/static-html-export`(未 push)
+- 観察:
+  - 各 HTML は inline CSS/JS + JSON データの単体ファイル。外部画像(Gyazo / Scrapbox 画像)は URL リンクのまま — 元ホストが死ぬと壊れる
+  - 内部 title が "Day1" "omni" のように短い map がある。Scrapbox 文脈と切り離すと意味が薄い → README で元 Scrapbox ページとの対応を補完した
+  - export は production Firestore へ直接読みに行く(`init_firebase.ts` のキーが production 固定)。local emulator では取得できない
+- 副次的な発見:`#view=...` URL は LoadingDialog が「読み取り専用 + Close ボタン」を要求する経路を必ず通る。Playwright や Cypress で view URL を自動化するときは Close 待ちが要る
+
+## [2026-06-03] ingest | クラスタ抽出の着地方向 — Google Maps メタファ
+
+- nishio が 2025-08-29 で停止した「クラスタの分け方」の問いに対し、2026-06-03 のセッションで **第三の道** を出した:「分割されたとしても 10x10 のマス目とかで割ってしまっていいんじゃないか、Google Maps のメタファー」
+- 二分法の整理:
+  - 連結成分 + マージ閾値 → オーバーラップ / 連鎖マージ問題
+  - 10 マス割り → 自然なクラスタが分割される
+  - **Google Maps 型 → 分割を許容、メタファとして合意済みなので問題にならない**
+- 新規 [themes/Google Maps メタファ](themes/Google_Mapsメタファ.md) を作成:
+  - 連結成分 vs グリッドの 7 軸比較表
+  - [認知メタファのデザイン](themes/認知メタファのデザイン.md) の延長として位置付け(タイル境界に意味が無いことすらユーザが既に学習済み)
+  - [人間が動かすから隙間ができる](themes/人間が動かすから隙間ができる.md) への第三の道(隙間に意味は無いがメタファで正当化)
+  - semantic zoom との接続(ズームレベル = タイル解像度 = 表札粒度 の 3 連動、`clusters_summary.json` → `tiles_zoom1.json / tiles_zoom2.json / ...` の階層)
+  - 本流 Kozaneba への含意(中心を変えるのではなく「大規模データを本流に登場させるときの表現方法」)
+  - 残る判断ポイント 5 つ(タイル境界基準 / 粒度 / 最大表示数 / 隣接表札衝突 / ズーム遷移)
+- 既存ページ更新:
+  - [themes/Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) — 「0. 未解決の問い」のクラスタ抽出方針 / マージ閾値の 2 つに「2026-06-03 着地方向」を追記。残り 2 つ(路線統合 / default UX 統合)は未解決のまま
+  - [concepts/広聴AI](concepts/広聴AI.md) — 「2026-06-03: クラスタ抽出方針の着地方向」サブセクションを追加
+  - [themes/人間が動かすから隙間ができる](themes/人間が動かすから隙間ができる.md) — 「第三の道: Google Maps メタファ」節を「アルゴ駆動側で『隙間の意味』を作るには」の直前に挿入。本ページの二分法を否定せずに迂回する関係を明示
+  - [themes/認知メタファのデザイン](themes/認知メタファのデザイン.md) — 既知メタファ事例リストに Google Maps を追加、関連リンクにも追加
+  - [index.md](index.md) — Themes リストに新ページを追加
+- 主要な示唆:
+  - 設計判断のボトルネック(2025-08-29 で止まった理由)が「正しいクラスタを定義しようとした」ことだった、と読み直せる。**「諦める」ことで前に進める** 解法
+  - 認知メタファのデザイン哲学が **「ユーザが諦めを受容しているメタファ」を借りる** ことまで含む、と拡張できる(Google Maps タイル境界の恣意性をユーザは既に受容している)
+  - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) の「AI は実装は速いが設計判断は肩代わりしない」観察と整合:設計判断は人間が出さないと前に進まない、Google Maps メタファは nishio の人間判断による着地
