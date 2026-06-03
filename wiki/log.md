@@ -803,3 +803,96 @@ updated: 2026-06-03
   - [themes/Canvas移行の検討](themes/Canvas移行の検討.md) — 末尾に「2026-06-03: 1 万件デモを 2026-06 サーベイで再評価」節を追加
   - [themes/畳むUIの再設計](themes/畳むUIの再設計.md) — 「広聴 AI 1 万件ケースへの適用」節と関連リンクを追加
   - [index.md](index.md) — 新ページをカタログに追加
+
+## [2026-06-03] query | プロトタイプと本流のソースコード一次確認 — 「先取り」の発見と複数 wiki 訂正
+
+- nishio の指摘:そもそも 1 万件 Canvas デモのコードを読んでいない / GitHub にないか確認しろ
+- GitHub に [`nishio/canvas_kozaneba_prototype`](https://github.com/nishio/canvas_kozaneba_prototype) があった(public、2025-08-29 最終 commit、その後の更新なし)。`work/canvas_kozaneba_prototype/` に clone
+- コード一次確認による衝撃の発見:**直前に「拡張案」として提案した内容(inverse-zoom title / AI 自動表札 / cluster as first-class frame)は、ほぼ全て 2025-08-29 時点で既に実装済み** だった
+  - `src/types.ts:32` `ClusterSummary { id, rect, noteIds, texts, summary? }` が first-class frame
+  - `src/StickyNotesClustersView.tsx:304` で `screenNoteW >= 80` 閾値による representation switch(inverse-zoom title 相当)
+  - `src/summarizer.ts` で `/api/summarize` 呼び出し、フォールバックは上位 3 文 + トップ 8 キーワード
+  - `scripts/precompute_clusters.js` で OpenRouter `openai/gpt-4o-mini`(`max-tokens=600`)経由の precompute
+  - commit `e542fc7` の「クラスタ矩形のオーバーラップ併合と正方形化、収束まで反復」が [pKozaneba2025-08-29](../raw/scrapbox_kozaneba/2025-08-29__pKozaneba2025-08-29.md) の議論の収束版
+  - つまりプロトタイプは [畳むUIの再設計](themes/畳むUIの再設計.md) の 2026-06 結論を **2025-08 時点で LLM ペアプロで独立に先取り** していた
+- 「大きな付箋」用語が本流とプロトタイプで指すものが違うことも判明:
+  - 本流: 個別 こざね / group の `item.scale` 増加([BigSmallMenuItem.tsx](../work/kozaneba/src/Menu/BigSmallMenuItem.tsx) 操作、box とフォントが `useAdjustFontsizeStyle.tsx` で線形に拡大、`scale=1` 基準、`scale*=2` 等)
+  - プロトタイプ: cluster の representation モード `'sticky'`(2025-08-29 commit `d8f1053` で default 化)
+  - 同名異物として wiki 内で明示
+- 「font_size 拡大で実現」と直前の [大きな付箋](concepts/大きな付箋.md) に書いていたのも誤り。実際は `scale` 属性で、`adjustFontSize(text) * scale * shrink_on_print` を経由してフォントが拡大される(箱も同じ scale で線形拡大)
+- 既存ページの大幅訂正:
+  - [themes/Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) — **全面書き直し**。「拡張案」を「実装済み事実」に置き換え、本当の残拡張余地(人間が動かす layer / Magic Lens / AI 表札 override / Hierarchical Edge Bundling / 本流への持ち帰り)に絞る。タイトルも「先取りしていた事実と、本当の残拡張余地」に変更
+  - [concepts/大きな付箋](concepts/大きな付箋.md) — **全面書き直し**。本流の実装(`scale` 属性、`BigSmallMenuItem` 操作、box+font 線形拡大)を一次ソース確認で精密化、プロトタイプとの同名異物の表を追加
+  - [concepts/密度の高さを大きさに変換して可視化](concepts/密度の高さを大きさに変換して可視化.md) — 実装具体値で精密化(`POSITION_SCALE=4000` default、半径 0..20 螺旋、リング外枠のみ走査)
+  - [themes/Canvas移行の検討](themes/Canvas移行の検討.md) — 2026-06-03 節を「先取り」の発見に書き直し、本当の残拡張余地 4 軸を明示
+  - [themes/畳むUIの再設計](themes/畳むUIの再設計.md) — 「広聴 AI 1 万件ケースへの適用」節を「プロトタイプの先取り事例」に書き直し、本流改修案 1〜3 はプロトタイプを移植する形で書けることを示す
+  - [concepts/広聴AI](concepts/広聴AI.md) — 「2025-08-29 時点の到達点」サブセクションを追加、コード確認に基づく到達点リストを整理
+- メモリ更新: [feedback_canvas_kozaneba_prototype.md](../.claude/projects/-Users-nishio-kozaneba-dev-ai/memory/feedback_canvas_kozaneba_prototype.md) に「プロトタイプのコードは GitHub にある(work/canvas_kozaneba_prototype/)」「実装主張の検証は一次ソース(コード)を当たる」を追記
+- 主要な学び:
+  - **2025-08 のプロトタイプは 2026-06 サーベイの結論を独立に先取りしていた**。「賢い AI ペアプロは外部 best practice を引き出して実装に落とすことに長けている」([Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) の仮説)の強い傍証
+  - 本流に同等の semantic zoom + AI 表札が入っていないのは、設計判断の問題ではなく **データ層 / 状態管理 / 既存 UI との統合コスト** の問題と読み直せる
+  - wiki ページに実装詳細を書くときは [sources/kozaneba-code-architecture.md](sources/kozaneba-code-architecture.md) の又聞きではなく `work/kozaneba/` を直接 grep / Read で確認する(memory に保存済み)
+
+## [2026-06-03] query | Plan B 試行の結論を整理 → 線UI 再設計 + AI 委託フレーム
+
+- nishio が「Plan B 試行の結論セクションを整理して伝えて」と依頼。続いて「辺ラベル、まだ人間が体験できてない」と指摘。実ブラウザで触ると double-click で editor が開かないことが判明。
+- 原因調査:
+  - 親 SVG の CSS `pointerEvents: "none"` が子要素の SVG attribute `pointerEvents="stroke"` を上書きしている(現代ブラウザの一般的挙動)
+  - Cypress テストは `{ force: true }` で hit testing をバイパスして event handler を直接叩いていたので pass していた
+  - **自動テスト pass / 実装 merge 済み / 機能はノーオペ** の状態
+- 仮に修正すると別の問題: hit area が 16px 幅で kozane drag 開始を妨害する。2021-09 `949a1fd: all lines are now non-clickable` の設計原則(release-notes-2021-2025 に記録)を破る。
+- → spec writer 側(私)の不備と AI Agent (Codex) 側の不備、両方を確認。
+- 議論を経て nishio と統一設計に合意:
+  - **hover anchor + drag** で線を引く(Miro/FigJam 型)
+  - **release 後は編集 window** に入る(caret / 線種 chip / endpoint handle)
+  - **離脱 = commit** ルール(別 click / scroll / pan / hotkey すべて含む)
+  - **passive 線への再編集**は label text or 中点 affordance から同じ window へ復帰
+  - **iPad はセカンドプライオリティ**(hover の代替は後続で扱う)
+  - N項関係 UI / 線描画モード toolbar の完全廃止は本仕様 scope 外
+- 新規ページ 2 件 + 既存 1 件更新:
+  - [線UI 再設計 2026-06](themes/線UI再設計_2026-06.md) — 統一設計の仕様。AI Agent への次回入力
+  - [AI 委託の設計と検証 2026-06](themes/AI委託の設計と検証_2026-06.md) — spec writer/Agent/自動テスト/人間検証の協業分担、spec template、今回踏み外した点(S1-S4 + A1-A3)
+  - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 「人間体験での再評価」「ドラッグ不変条件と spec の不備」「仮説への最終判定(条件付き NO)」「次の一手(線UI 再設計に接続)」を追記
+- 効果:
+  - 仮説「賢い AI Agent は過去実装の悪いところを簡単に直す」は **spec / 検証フレームが揃わない状態では正しく測れない**ことが判明。Plan B 試行 1 ラウンドは「コード生成能力」しか測れていなかった
+  - 次回試行(線UI 再設計の実装委託)では spec template と人間検証を完了条件に含める
+  - 自動テストでの hit testing バイパス(`force: true`)は今後の AI Agent への spec で禁止事項として明示
+
+## [2026-06-03] fill back | Plan B 試行の結論を関連 7 ページに浸透
+
+- [線UI 再設計 2026-06](themes/線UI再設計_2026-06.md) と [AI 委託の設計と検証 2026-06](themes/AI委託の設計と検証_2026-06.md) を新規追加した後、その含意を既存ページに浸透。
+- 更新ページ(7):
+  - [辺ラベル](concepts/辺ラベル.md) — Codex 実装ノーオペの原因と、Miro/tldraw 型「最も安全」判定が誤りだった点を追記
+  - [線を引く機能](concepts/線を引く機能.md) — 線生成 UI 全体再設計へ問題が引き上げられた経緯、click-click 描画と inline caret の相性問題
+  - [kozaneba-code-architecture](sources/kozaneba-code-architecture.md) — 含意 #1「辺ラベル UI は入力経路問題に絞れる」に 2026-06-03 訂正を追加
+  - [活用されなかった機能](themes/活用されなかった機能.md) — 「default で線が増えない方を選ぶ」原則と外部 best practice 移植の罠
+  - [線UIサーベイ 2026](themes/線UIサーベイ_2026.md) — サーベイ案の Kozaneba 固有化 = 線UI 再設計案への着地
+  - [3 Plan 議論](themes/3plan議論.md) — Plan B 仮説検証フレーム自体を再構築中の状況を追記
+  - [3 つのストーリー比較](themes/3つのストーリー比較.md) — A→B トリガー判定はフレーム整備後の次回試行から
+- memory 更新: [project_plan_b_trial_2026_06.md](../../.claude/projects/-Users-nishio-kozaneba-dev-ai/memory/project_plan_b_trial_2026_06.md) を「条件付き NO」「次回試行で線UI 再設計 spec + AI 委託 spec template を組み込む」状態に書き換え。
+- 効果:
+  - 線UI 関連の wiki ページ群が一貫した「外部 best practice をそのまま移植してはダメ、Kozaneba 固有制約に再結晶化が必要」のメッセージを持つ状態に
+  - 次回試行の入り口が 2 ページ([線UI再設計] + [AI委託の設計と検証])に明確化
+  - 「force: true で hit testing バイパスする自動テストは機能正しさを保証しない」が wiki 横断で記録された
+
+## [2026-06-03] query | プロトタイプの「先取り」誇張の二段階訂正
+
+- nishio の指摘 1:default view を見ろ — `canvas-kozaneba-prototype.vercel.app/` を開くと `StickyNotesZoomDemo`(LOD だけ)、cluster sticky / AI 表札は `#/clusters` という experimental サブルートにしか居ない。default UX に未統合
+- nishio の指摘 2:翌日 [pKozaneba2025-08-29](../raw/scrapbox_kozaneba/2025-08-29__pKozaneba2025-08-29.md) を見ろ — クラスタをどう決めるか悩んだところで開発が止まっている
+- 再読すると 2025-08-29 は **クラスタ抽出方針(連結成分でオーバーラップ vs 10 マス割りで自然なクラスタが分割)、マージ閾値(3 割 / 2 割で連鎖マージ)、10000 vs 1000 路線統合可否** が全て未解決のまま、その日が最終 commit
+- つまり前回の「2025-08-29 時点で全部実装済み / 先取り」記述は **二段階で誇張** していた:
+  - default UX への統合なし(experimental サブルート止まり)
+  - 設計判断未解決のまま停止(cluster sticky rendering は draft の一バージョン)
+- 既存ページの再訂正:
+  - [themes/Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) — タイトルを「未解決の探索の途中で停止、サーベイ結論との関係」に変更。冒頭に default UX 未統合 + 設計判断未解決の二点を明示、「先取り」表現を削除。本当の残課題に **0. nishio 自身が投げた未解決の問い** を最上位に追加
+  - [concepts/広聴AI](concepts/広聴AI.md) — 「2025-08-29 時点の到達点」を「到達点と未解決の問い」に書き直し、default UX に出ているものと experimental サブルートのみのものを分離、最終 commit 日の問い 3 つを記録
+  - [themes/Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 前史節に「AI ペアプロは実装は速いが設計判断は肩代わりしない、むしろボトルネックが顕在化する」を追加、仮説の正確な形を「✅ 実装スピード / ❓ 設計判断スピード」に分離
+  - [themes/人間が動かすから隙間ができる](themes/人間が動かすから隙間ができる.md) — nishio が「無闇に同一視しない方が良い」と言ってプロトタイプを止めた事実を **当事者証言** として強調
+  - [themes/Canvas移行の検討](themes/Canvas移行の検討.md) — 2026-06-03 節を「誇張の二段階訂正」に書き直し
+  - [themes/畳むUIの再設計](themes/畳むUIの再設計.md) — 「先取り完成品」表現を削除、本流改修案は draft 移植では済まないことを明示
+  - [index.md](index.md) — Canvas 1 万件デモの拡張 の説明を訂正版に
+- メモリ更新:[feedback_canvas_kozaneba_prototype.md](../.claude/projects/-Users-nishio-kozaneba-dev-ai/memory/feedback_canvas_kozaneba_prototype.md) に二段階訂正の発見と仮説の精密化を追記
+- 主要な学び:
+  - **「コード上に rendering ロジックが存在する」≠「機能として完成」**。default UX 統合 / 設計判断解決 / 当事者の納得、の 3 段階を区別する
+  - 「AI ペアプロが best practice を先取りした」と読みたがる引力は強いが、**実装スピードと設計判断スピードを別物として扱う** ことで仮説検証の解像度が上がる
+  - Scrapbox の **最終エントリの最後の一文** を読むことの重要性。「実装した」commit があってもその日の議論が未解決で終わっているなら、それは「完成」ではなく「停止」

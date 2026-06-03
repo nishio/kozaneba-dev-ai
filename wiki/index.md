@@ -118,10 +118,12 @@ updated: 2026-06-03
 - [データモデル刷新の選択肢](themes/データモデル刷新の選択肢.md) — 1 巨大 JSON からの脱出、Yjs/Automerge/Loro/Zero/SQLite-WASM/CAS の比較、Loro ホスティング 3 ルート(Firestore + binary / Cloudflare DO+R2 / 自前 Hono+Postgres)
 - [線UIサーベイ 2026](themes/線UIサーベイ_2026.md) — Miro/FigJam/tldraw/Kinopio/Tana 他 16 ツールの connection 描画パターン分類と Kozaneba 改修案
 - [畳むUIの再設計](themes/畳むUIの再設計.md) — Pad++/Bret Victor/Heptabase/Magic Lens/AI 自動表札による「囲んで畳む」の刷新案
-- [Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) — 2025-08 の 1 万枚 Canvas プロトタイプ(本流ではないサイド実験)を 2026-06 サーベイで再評価し、続けるなら/知見を持ち帰るなら、という条件付きで semantic zoom / AI 表札 / first-class frame の適用可能性を整理
+- [Canvas 1 万件デモの拡張](themes/Canvas_1万件デモの拡張.md) — 2025-08 の 1 万枚 Canvas プロトタイプ(本流ではないサイド実験、`#/clusters` サブルートに cluster sticky の draft が残ったまま 2025-08-29 にクラスタ抽出方針 / マージ閾値 / 路線統合可否が未解決のまま開発停止)を 2026-06 サーベイと突き合わせ、AI ペアプロで実装は速いが設計判断は残ることを整理
 - [認知メタファのデザイン](themes/認知メタファのデザイン.md) — 既知メタファを借りる、抽象度を上げない、という Kozaneba 設計哲学。散布図/KDE/付箋の比較から内部構造・見栄え・既知メタファの 3 軸トレードオフを抽出
 - [人間が動かすから隙間ができる](themes/人間が動かすから隙間ができる.md) — 本流(人間駆動の小規模)とプロトタイプ(アルゴ駆動の大規模)で「空間の隙間の意味」が違うことを示し、frame 抽象を機械的に統一しない理由を提供。物理演算 禁忌と同系統
-- [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験
+- [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験。人間体験で実装ノーオペ発覚 → 線UI全体の再設計と spec/検証フレームの再構築へ
+- [線UI 再設計 2026-06](themes/線UI再設計_2026-06.md) — hover anchor + 編集 window + 離脱 commit の統一設計。ラベル/線種/相手間違いの修正動線を「commit 瞬間」を起点に統合
+- [AI 委託の設計と検証 2026-06](themes/AI委託の設計と検証_2026-06.md) — Plan B 試行から抽出した、spec writer (LLM) / AI Agent (Codex) / 自動テスト / 人間検証の協業分担と spec template
 - [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、状態モデル中心のキャンバステスト戦略、UI テスト helper 整備方針の整理
 - [テスト改善計画](themes/テスト改善計画.md) — PR #40〜#44 で CI / Vite 移行まで完了後、#17 を座標変換・hit test・undo/redo・保存復元などへ分解し、実測済みの旧 Movidea spec 棚卸しへ接続する計画
 - [CI安定化とVite移行 2026-06](themes/CI安定化とVite移行_2026-06.md) — 座標ロジック単体テスト、required CI、Node 24、CRA から Vite への移行、production console log cleanup を PR #40〜#45 で完了した実施記録と学び

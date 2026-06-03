@@ -145,17 +145,25 @@ Magic Ink の枠組みで本テーマを言い直すと:
 
 「**畳む / 開く** を明示的 command として残しつつ、context によって **自動的に何が見えるかが変わる**」というハイブリッド設計が現実解。完全自動は [物理演算](../concepts/物理演算.md) と同じく「機械が動かしてはいけない」の禁忌に触れる可能性が高い。
 
-## 広聴 AI 1 万件ケースへの適用(本流ではなくサイド実験側)
+## 広聴 AI 1 万件プロトタイプの先取り事例(本流ではなくサイド実験側)
 
-[Canvas移行の検討](Canvas移行の検討.md) で扱った 2025-08 のプロトタイプ([pKozaneba2025-08-26~27](../../raw/scrapbox_kozaneba/2025-08-26__pKozaneba2025-08-26~27.md))は **本流 Kozaneba ではなく [広聴AI](../concepts/広聴AI.md) 由来の独立サイド実験**(deploy: `canvas-kozaneba-prototype.vercel.app`、`work/kozaneba/` 本流とは別実装)。
+[Canvas移行の検討](Canvas移行の検討.md) で扱った 2025-08 のプロトタイプ([pKozaneba2025-08-26~27](../../raw/scrapbox_kozaneba/2025-08-26__pKozaneba2025-08-26~27.md)、repo: `nishio/canvas_kozaneba_prototype`)は **本流 Kozaneba ではなく [広聴AI](../concepts/広聴AI.md) 由来の独立サイド実験**。
 
-本ページの対象(本流の「囲んで畳む」改修)から見ると別系統だが、**プロトタイプ側で続けるなら / 知見を持ち帰るなら** という条件付きで同じ枠組みが効きうる:
+本ページが 2026-06-01 に外部文献から導いた中心提案(inverse-zoom title / AI 自動表札 / first-class frame)に対応する rendering ロジックが、2026-06-03 のコード確認でプロトタイプ内に見つかった:
 
-- **inverse-zoom title**: 螺旋グリッドに集まった N 枚を、閾値以下のズームでは **代表 1 枚だけ大きく描く**
-- **AI 自動表札**: 集まった N 枚を LLM で要約 → グリッド代表表札にする。広聴 AI 側の凝集クラスタリングと併用しても自然(クラスタ ID = 表札の単位)
-- **first-class frame**: プロトタイプ側で frame 抽象を入れれば、本流側の group 改修(本ページの本論)と **同じパターン** が両方に並存する
+- **inverse-zoom title**: `screenNoteW >= 80` 閾値で「個別付箋表示」と「クラスタ大きな付箋表示」を切替(`StickyNotesClustersView.tsx:304`)
+- **AI 自動表札**: `summarizer.ts` の `/api/summarize` 呼び出し + `precompute_clusters.js` の OpenRouter `gpt-4o-mini`(`max-tokens=600`)で precompute、`ClusterSummary.summary` として描画
+- **first-class frame**: `types.ts:32` `ClusterSummary { id, rect: ClusterRect, noteIds, texts, summary? }`
 
-ただし両者を **データモデル上で同じ型に統合するかは独立の判断**。[人間が動かすから隙間ができる](人間が動かすから隙間ができる.md) で示すとおり、**アルゴ生成 frame と人間配置 frame では「隙間の意味」が違う**(前者は副産物、後者は意思決定の投影)ため、frame 抽象を機械的に揃えると意味が壊れる可能性がある。
+ただし「先取り完成品」と判断するのは誇張で、**正確には**:
+
+- **default UX には未統合**:`canvas-kozaneba-prototype.vercel.app/` のデフォルトは `StickyNotesZoomDemo`(LOD だけ)で、上記は `#/clusters` という experimental サブルートにしかない
+- **設計判断が未解決のまま停止**:[pKozaneba2025-08-29](../../raw/scrapbox_kozaneba/2025-08-29__pKozaneba2025-08-29.md) で nishio はクラスタ抽出方針(連結成分 vs 10 マス割り)、マージ閾値、路線統合可否で悩んでいる途中で開発を止めた
+- つまり cluster sticky rendering は **draft 段階の一バージョン**
+
+含意としては、本ページの本流改修案 1〜3 は「プロトタイプの draft を移植する」だけでは済まず、**プロトタイプが避けて通った設計判断(どう束ねるか / 閾値 / 統合可否)を本流側でも別途解く必要がある**。
+
+しかも [人間が動かすから隙間ができる](人間が動かすから隙間ができる.md) で示すとおり、**アルゴ生成 frame(プロトタイプ)と人間配置 frame(本流)では「隙間の意味」が違う**(前者は副産物、後者は意思決定の投影)ため、frame 抽象を機械的に揃えると意味が壊れる可能性がある。nishio 本人が「**10000 件路線と 1000 件路線を無闇に同一視しない方が良い**」と最終 commit 日に言って止まったのは、この差を当事者として体感した結果と読める。
 
 詳細は [Canvas 1 万件デモの拡張](Canvas_1万件デモの拡張.md)。
 
