@@ -2,7 +2,7 @@
 title: Log
 type: meta
 created: 2026-05-16
-updated: 2026-06-03
+updated: 2026-06-04
 ---
 
 時系列の作業ログ。append-only。新しいエントリはファイル末尾に追加する。見出しは `## [YYYY-MM-DD] <action> | <subject>` の形式で統一する(`grep "^## \[" wiki/log.md` でパース可能にするため)。
@@ -933,3 +933,17 @@ updated: 2026-06-03
   - 設計判断のボトルネック(2025-08-29 で止まった理由)が「正しいクラスタを定義しようとした」ことだった、と読み直せる。**「諦める」ことで前に進める** 解法
   - 認知メタファのデザイン哲学が **「ユーザが諦めを受容しているメタファ」を借りる** ことまで含む、と拡張できる(Google Maps タイル境界の恣意性をユーザは既に受容している)
   - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) の「AI は実装は速いが設計判断は肩代わりしない」観察と整合:設計判断は人間が出さないと前に進まない、Google Maps メタファは nishio の人間判断による着地
+
+## [2026-06-04] spec | Plan B 次回試行(線UI 全体再設計)の Codex 発注 prompt を作成
+
+- Plan B 試行 1 ラウンド(辺ラベル UI 単独)の反省を踏まえ、次回試行を **線UI 全体再設計の 1 PR 一括** で Codex 発注する準備。Codex を継続選定したのは spec/検証フレーム改善の効果を Agent 切り替えと混同せず単独で測るため
+- 新規:[線UI 再設計 2026-06 — Codex 発注 prompt](themes/線UI再設計_2026-06_codex_prompt.md)
+  - [線UI 再設計 2026-06](themes/線UI再設計_2026-06.md)(人間向け設計案)を、[AI 委託の設計と検証 2026-06](themes/AI委託の設計と検証_2026-06.md) の spec template に従って AI Agent 向け prompt に再整形
+  - 構成: Hard constraints / Scope (in/out) / 中心アイデア(4 要素) / 関連設計史抜粋(5 件、本文に貼付) / データモデル / 既存コード / 自動テスト制約 / 完了条件 / PR テンプレート
+  - 設計史抜粋に **2022-05-26 フォーラム明示**(線当たり判定 → kozane drag 妨害 → 撤回)、**`AnnotationLayer.tsx` 親 SVG `pointerEvents: "none"` の意図**、**「default で線が増えない」原則(2023-02-27 明文化)** を含める
+  - `{ force: true }` 系 hit testing バイパスを Cypress / Playwright で禁止と明示
+  - 完了条件の頂点に「人間が dev server で実ブラウザを起動し、新動線を実際に使う」「思考フローを止めずに使えることを確認」を順序付きで配置
+  - 報告必須項目に「`{ force: true }` 使用箇所(無ければ『無し』と明記)」を追加 — 前回 Plan B 試行で Codex が hit testing をバイパスしていた事実を spec 側で検知できる仕組み
+- 更新:[index.md](index.md) に新ページの 1 行説明を追加
+- 配置先の選定:wiki/themes/ 直下に「設計案」と「Codex prompt 派生」を隣り合わせで置く案を採用(別ディレクトリ不要、設計案と発注版を 1:1 で対応させやすい)
+- 次のアクション:nishio が Codex web UI に prompt 本文を貼り付けて発注。Codex の PR が出たら spec writer / nishio で人間検証 → 完了判定。試行結果を [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) に追記して「条件付き NO」判定を更新する

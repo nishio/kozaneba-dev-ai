@@ -124,6 +124,7 @@ updated: 2026-06-03
 - [Google Maps メタファ](themes/Google_Mapsメタファ.md) — 連結成分 vs 10 マス割り の二者択一を「タイル方式で開き直る」第三の道で解消。「正しいクラスタ」を諦めて「タイルだから」というメタファで意味の欠如を正当化、認知メタファ + semantic zoom + AI 表札 が 3 連動する設計テンプレ
 - [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) — 辺ラベル UI を AI Agent に投げて「賢い AI Agent は過去実装の悪いところを簡単に直す」仮説を検証する単発実験。人間体験で実装ノーオペ発覚 → 線UI全体の再設計と spec/検証フレームの再構築へ
 - [線UI 再設計 2026-06](themes/線UI再設計_2026-06.md) — hover anchor + 編集 window + 離脱 commit の統一設計。ラベル/線種/相手間違いの修正動線を「commit 瞬間」を起点に統合
+- [線UI 再設計 2026-06 — Codex 発注 prompt](themes/線UI再設計_2026-06_codex_prompt.md) — 上の設計案を Codex (cloud) への発注 prompt として整形。hard constraints / 設計史抜粋 / `force: true` 禁止 / 人間検証手順 を凝集、そのまま Codex に貼り付けて使う
 - [AI 委託の設計と検証 2026-06](themes/AI委託の設計と検証_2026-06.md) — Plan B 試行から抽出した、spec writer (LLM) / AI Agent (Codex) / 自動テスト / 人間検証の協業分担と spec template
 - [Kozaneba テスト基盤調査 2026-06](themes/Kozanebaテスト基盤調査_2026-06.md) — CI 未接続、Cypress 既存ベースライン失敗、Firebase emulator 必要性、状態モデル中心のキャンバステスト戦略、UI テスト helper 整備方針の整理
 - [テスト改善計画](themes/テスト改善計画.md) — PR #40〜#44 で CI / Vite 移行まで完了後、#17 を座標変換・hit test・undo/redo・保存復元などへ分解し、実測済みの旧 Movidea spec 棚卸しへ接続する計画
