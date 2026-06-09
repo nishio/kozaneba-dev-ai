@@ -909,6 +909,16 @@ updated: 2026-06-04
   - export は production Firestore へ直接読みに行く(`init_firebase.ts` のキーが production 固定)。local emulator では取得できない
 - 副次的な発見:`#view=...` URL は LoadingDialog が「読み取り専用 + Close ボタン」を要求する経路を必ず通る。Playwright や Cypress で view URL を自動化するときは Close 待ちが要る
 
+## [2026-06-09] tooling | 静的 viewer の font-size を実 DOM 二分探索に置換、13 件再生成
+
+- 文脈:[前回 export した 13 サンプル](#) を開いた nishio から「フォントサイズがおかしいね、大きすぎるかも」との指摘
+- 原因特定:`build_static_html.ts` の `getFontSize` が closed-form heuristic `min(67, 130/√(len+1))` で計算していた。live app の [adjustFontSize](../work/kozaneba-static-html-export/src/Kozane/AdjustFontSize.tsx)(hidden な kozane に text を流し込んで scrollHeight が 100px を超えない最大 font を bsearch、結果をキャッシュ)と比較すると中長文で 1.3〜1.6 倍大きい。原因は heuristic が line wrap / line-height / padding を一切見ないこと
+- 修正(commit `7762f03`):viewer の IIFE 内に `.kozane` の hidden probe を立て、live と同じ二分探索を JS で再現。CSS は viewer 既存の `.kozane` / `.kozane-content` をそのまま使い「box にぴったり収まる」セルフコンシステンシーを優先(live と pixel-perfect を取らない)
+- ハマり:`var FONT_INITIAL / fontSizeCache / fontProbe` の宣言を `getFontSize` 関数定義のすぐ上に書いたら、IIFE 冒頭で先に `render()` が走るタイミングで hoisting により `fontSizeCache` が `undefined` のままアクセスされ「Cannot read properties of undefined (reading '導出')」で全 kozane が出ない blank 画面に。状態 var を IIFE 冒頭の `KOZANE_WIDTH` 群と並べて宣言する位置に移して解決
+- 13 件全部再 export して examples/ を上書き(`Day1` で `コンセプト` / `タイトル` 等が 3 行強の box overflow → 2 行で収まるサイズに修正されたことを screenshot で確認)
+- 学び:**静的 export における「データを焼く」vs「ロジックを焼く」の選択**。font sizing は viewer のロジック側に持たせるほうが export 時計算より安全(export 時の DOM 状態が崩れていても影響しない、view 環境ごとのフォントメトリクスにも追随)。同じ思想で他の派生計算(group title 高さ、scrapbox-card のサイズ等)も viewer 側に閉じておくのが筋
+
+
 ## [2026-06-03] ingest | クラスタ抽出の着地方向 — Google Maps メタファ
 
 - nishio が 2025-08-29 で停止した「クラスタの分け方」の問いに対し、2026-06-03 のセッションで **第三の道** を出した:「分割されたとしても 10x10 のマス目とかで割ってしまっていいんじゃないか、Google Maps のメタファー」

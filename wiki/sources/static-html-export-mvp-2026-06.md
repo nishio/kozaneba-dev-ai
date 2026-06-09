@@ -2,12 +2,14 @@
 title: 静的 HTML export MVP 2026-06
 type: source
 created: 2026-06-03
-updated: 2026-06-03
+updated: 2026-06-09
 sources:
   - work/kozaneba-static-html-export/src/StaticExport/build_static_html.ts
   - work/kozaneba-static-html-export/src/StaticExport/download_static_html.ts
   - work/kozaneba-static-html-export/src/StaticExport/build_static_html.test.ts
   - work/kozaneba-static-html-export/src/AppBar/MainMenu/MainMenu.tsx
+  - work/kozaneba-static-html-export/examples/README.md
+  - work/kozaneba-static-html-export/src/Kozane/AdjustFontSize.tsx
   - https://github.com/nishio/kozaneba/pull/47
 ---
 
@@ -106,10 +108,44 @@ PR 作成直後、GitHub Actions は running だった。
 - schema を壊す新 item type を追加する場合、static viewer 側にも fallback 表示を足す必要がある。
 - 長期 archival format にするなら、viewer version と doc schema version の互換表を別途持つ。
 
+## 2026-06-09 拡張: 13 map サンプル同梱 + font sizing 修正
+
+PR #47 の branch `codex/static-html-export` 上で 2 つの後続 commit を積んだ:
+
+### サンプル同梱(commit `7a992a8`)
+
+[nishio の Scrapbox](https://scrapbox.io/nishio) から `https://kozaneba.netlify.app/#view=...` として参照されてきた **public な map 13 件** を、新 viewer で書き出して `examples/` に commit。各 1.4MB 合計。これにより、PR を merge した時点で「機能 + サンプル」がセットで GitHub 上から見える(README 等から `examples/<file>.html` を直接プレビューできる)。
+
+- 1 ソース 1 ページの 1:1 対応で 13 件、内訳は [examples/README.md](../../work/kozaneba-static-html-export/examples/README.md) に表で記載。LENCHI Day1/Day3、KJ法の表札変更、コーディングを支える技術 目次、華厳経と荘子の融合 など、KJ法成果物として見栄えするものを網羅
+- 取得経路:`work/kozaneba-static-html-export/` で Vite dev 起動 → Playwright(headless Chromium、`/tmp/kozaneba-export/`)で各 `#view=<id>` を巡回 → MainMenu → `Download Static HTML` → page.on('download') で保存
+- LoadingDialog の挙動を発見:匿名ユーザは [`firestore.rules`](../../work/kozaneba-static-html-export/firestore.rules) の `allow get: if true` で read だけ通る一方、`can_write()=false` のため [LoadingDialog](../../work/kozaneba-static-html-export/src/Dialog/LoadingDialog.tsx) が auto-close せず `Close` ボタン待ちに止まる。Playwright や Cypress で view URL を自動化するときは Close ボタンクリックを挟む必要がある(本 PR のサンプル生成スクリプトでも対応済)
+- 14 件と最初に誤カウント、実際は 13 件(各 view ID は 1 ページからのみ参照)
+
+### font sizing 修正(commit `7762f03`)
+
+nishio が出力サンプルを開いて「フォントサイズがおかしいね、大きすぎるかも」と指摘。原因は viewer の `getFontSize` が closed-form heuristic `min(67, max(10, 130/√(len+1)))` を使っており、live app の [adjustFontSize](../../work/kozaneba-static-html-export/src/Kozane/AdjustFontSize.tsx)(hidden な kozane に text を流して scrollHeight が KOZANE_HEIGHT を超えない最大 font を bsearch、結果をキャッシュ)と比べて中長文で 1.3〜1.6 倍大きい。heuristic は line wrap / line-height / padding を一切見ない。
+
+修正:viewer の IIFE 内に `.kozane` の hidden probe を立て、live と **同じ二分探索を JS で再現**。CSS は viewer 既存の `.kozane` / `.kozane-content` をそのまま probe にも使い、表示が self-consistent(text が box にちょうど収まる)になることを優先(live app の line-height 0.9 / padding 無しに揃えて pixel-perfect 同期する選択は取らなかった)。13 件のサンプルも regenerate して上書き。
+
+実装上の罠:`var FONT_INITIAL / fontSizeCache / fontProbe` の宣言を `getFontSize` 関数定義の直前(IIFE の下方)に書いたら、`render()` が IIFE 冒頭で実行される時点で hoisting により `fontSizeCache` が `undefined` のままアクセスされ、TypeError で全 kozane が描画されない blank 画面になった。状態 var を IIFE 冒頭の `KOZANE_WIDTH` 群と並ぶ位置に移して解決。
+
+### 設計判断:「データを焼く」vs「ロジックを焼く」
+
+今回の font sizing 修正は **「viewer 側に layout 計算を持たせる」方向** に倒した。代替案として「export 時に live app の `adjustFontSize` を全 item に対して呼んで結果を JSON に焼き込む」もあり得たが、後者は
+
+- export 時の DOM 状態が崩れていると壊れる(`hidden-kozane` probe が初期化されないと NaN を焼く)
+- view 環境(ブラウザのフォントメトリクス、OS)が export 時と異なる場合に再計算できない
+- export ロジックと viewer ロジックが乖離した時の混乱
+
+という unattractive な属性がある。同じ思想で他の派生計算(group title 高さ、scrapbox-card のサイズ等)も viewer 側に閉じておくのが筋。**「viewer に持たせる layout 計算」と「export 時に確定する位置情報」の境界を意識して設計する** という指針が立った。
+
 ## Sources
 
 - [build_static_html.ts](../../work/kozaneba-static-html-export/src/StaticExport/build_static_html.ts)
 - [download_static_html.ts](../../work/kozaneba-static-html-export/src/StaticExport/download_static_html.ts)
 - [build_static_html.test.ts](../../work/kozaneba-static-html-export/src/StaticExport/build_static_html.test.ts)
 - [MainMenu.tsx](../../work/kozaneba-static-html-export/src/AppBar/MainMenu/MainMenu.tsx)
+- [examples/README.md](../../work/kozaneba-static-html-export/examples/README.md) — 13 サンプルの一覧
+- [AdjustFontSize.tsx](../../work/kozaneba-static-html-export/src/Kozane/AdjustFontSize.tsx) — live app 側の binary search
+- [LoadingDialog.tsx](../../work/kozaneba-static-html-export/src/Dialog/LoadingDialog.tsx) — Close 待ち挙動の根拠
 - [PR #47: Add static HTML export](https://github.com/nishio/kozaneba/pull/47)

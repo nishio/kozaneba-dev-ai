@@ -140,7 +140,7 @@ updated: 2026-06-03
 - [Kozaneba コード構造調査 2026-05](sources/kozaneba-code-architecture.md) — `work/kozaneba/` 現コードの構造、Item/Annotation スキーマ、物理演算実装、辺ラベルや N項関係がスキーマ上は実装済みである事実
 - [キャンバス状態テスト戦略 2026-06](sources/canvas-state-testing-strategy-2026-06.md) — ピクセル単位 E2E ではなく world 座標・状態モデル・イベント列を主対象にするキャンバスアプリのテスト設計メモ
 - [Movidea legacy test inventory 2026-06](sources/movidea-legacy-test-inventory-2026-06.md) — Java 21 + Firebase emulator で旧 Movidea Cypress 23 specs を実測し、promote / rewrite-before-decision / delete に分類した棚卸し
-- [静的 HTML export MVP 2026-06](sources/static-html-export-mvp-2026-06.md) — Ba JSON と軽量 read-only viewer を 1 ファイル HTML に埋め込む `Download Static HTML` 実装(PR #47)の記録
+- [静的 HTML export MVP 2026-06](sources/static-html-export-mvp-2026-06.md) — Ba JSON と軽量 read-only viewer を 1 ファイル HTML に埋め込む `Download Static HTML` 実装(PR #47)の記録、+ 2026-06-09 拡張で Scrapbox 参照 13 map サンプル同梱 / viewer の font sizing を実 DOM 二分探索化
 - [Release Notes / フォーラム 2021-2025 要約](sources/release-notes-2021-2025.md) — kozaneba-forum (英 17 ページ) と kozaneba-forum-jp (日 48 ページ) の全件を読んだ要約。EN/JP の差分、機能カテゴリ別タイムライン、外部ユーザ一覧、公開された設計原則(「default で線が増えない方を選ぶ」「線を click 可能にすると ドラッグ が妨害される」)を抽出
 
 ## Meta
