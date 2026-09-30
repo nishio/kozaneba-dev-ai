@@ -957,3 +957,8 @@ updated: 2026-06-04
 - 更新:[index.md](index.md) に新ページの 1 行説明を追加
 - 配置先の選定:wiki/themes/ 直下に「設計案」と「Codex prompt 派生」を隣り合わせで置く案を採用(別ディレクトリ不要、設計案と発注版を 1:1 で対応させやすい)
 - 次のアクション:nishio が Codex web UI に prompt 本文を貼り付けて発注。Codex の PR が出たら spec writer / nishio で人間検証 → 完了判定。試行結果を [Plan B 試行 2026-06](themes/Plan_B試行_2026-06.md) に追記して「条件付き NO」判定を更新する
+
+## [2026-09-30] file back | N項関係に「囲みが多項関係」「ジャンクション案は名詞化」を追記
+
+- nishio の Cosense「図解的ハイパーエッジ」（2026-09-16）を起点にした考察（grasp-nishio、vt-wiki）から、Kozaneba 側に効く2点を `concepts/N項関係.md` の Updates に追記。(1) N項線は退いたが囲み（グループ）が多項関係として残っている、(2) 2026-06 のジャンクションノード案は関係の名詞化で、図の強み（配置の整合性）を使わない描き方だという評価軸
+- index の N項関係の行を更新。正典（CLAUDE.md）への波及なし
