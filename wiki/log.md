@@ -962,3 +962,9 @@ updated: 2026-06-04
 
 - nishio の Cosense「図解的ハイパーエッジ」（2026-09-16）を起点にした考察（grasp-nishio、vt-wiki）から、Kozaneba 側に効く2点を `concepts/N項関係.md` の Updates に追記。(1) N項線は退いたが囲み（グループ）が多項関係として残っている、(2) 2026-06 のジャンクションノード案は関係の名詞化で、図の強み（配置の整合性）を使わない描き方だという評価軸
 - index の N項関係の行を更新。正典（CLAUDE.md）への波及なし
+
+## [2026-09-30] filing-back | wiki森の横断照合で見つかった食い違い 2 件を修正
+
+- wiki森の public wiki 12個を grasp `cross-project-spreads` で同名 handle ごとに束ね、Gemini（3.8 Flash medium / 3.1 Pro）に wiki をまたぐ食い違いを挙げさせ、Claude が原文と照らして判定した（2026-09-30、galleria の taskF）。Gemini の修正案はそのまま当てていない。
+- [concepts/ブロードリスニング.md](concepts/ブロードリスニング.md): いどばたを「個人レベルの聞く技術」から分け、DD2030 の議論・合意形成の道具として書いた（plurality-llm-wiki-ja のいどばた / DD2030 と整合）。
+- [entities/Scrapbox.md](entities/Scrapbox.md): 2024-05 の Cosense への改称を付記（lenchi と整合）。

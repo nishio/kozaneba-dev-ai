@@ -17,7 +17,7 @@ sources:
 
 ## 定義
 
-**Scrapbox** は Helpfeel(旧 Nota)が提供するリンクベースの集合知ノートツール。nishio が長年ヘビーに使っており、`nishio.json` だけで 25,633 ページの蓄積がある(2026-05 時点)。Kozaneba と並んで nishio の知的生産の中核ツール。
+**Scrapbox**(2024-05 に Cosense へ改称。この wiki では旧名で書く)は Helpfeel(旧 Nota)が提供するリンクベースの集合知ノートツール。nishio が長年ヘビーに使っており、`nishio.json` だけで 25,633 ページの蓄積がある(2026-05 時点)。Kozaneba と並んで nishio の知的生産の中核ツール。
 
 ## [Kozaneba](Kozaneba.md) との構造の比較
 
