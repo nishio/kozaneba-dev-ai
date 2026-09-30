@@ -968,3 +968,7 @@ updated: 2026-06-04
 - wiki森の public wiki 12個を grasp `cross-project-spreads` で同名 handle ごとに束ね、Gemini（3.8 Flash medium / 3.1 Pro）に wiki をまたぐ食い違いを挙げさせ、Claude が原文と照らして判定した（2026-09-30、galleria の taskF）。Gemini の修正案はそのまま当てていない。
 - [concepts/ブロードリスニング.md](concepts/ブロードリスニング.md): いどばたを「個人レベルの聞く技術」から分け、DD2030 の議論・合意形成の道具として書いた（plurality-llm-wiki-ja のいどばた / DD2030 と整合）。
 - [entities/Scrapbox.md](entities/Scrapbox.md): 2024-05 の Cosense への改称を付記（lenchi と整合）。
+
+## [2026-10-01] filing-back | 広聴AI に DD2030 の名を追記
+
+- wiki森の横断照合（2026-09-30）で「食い違いではない」と判定された件への任意の追記。[concepts/広聴AI.md](concepts/広聴AI.md) に「DD2030 が開発する OSS」を足した（broad-listening-book-wiki の「DD2030 が開発」と揃える）。
